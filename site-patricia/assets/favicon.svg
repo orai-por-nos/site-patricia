@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon na identidade existente: tile teal do brand mark + linha terracota do hero -->
+  <rect width="64" height="64" rx="14" fill="#123c34"/>
+  <text x="32" y="42" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700" letter-spacing="0.5" fill="#faf6ef">PG</text>
+  <path d="M18 51 C 26 46 38 46 46 51" fill="none" stroke="#c96f4a" stroke-width="4" stroke-linecap="round"/>
+</svg>
