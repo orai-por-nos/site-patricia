@@ -1,0 +1,39 @@
+﻿{
+    "regions":  {
+                    "cervical":  [
+                                     "cervical/C1.glb",
+                                     "cervical/C2.glb",
+                                     "cervical/C3.glb",
+                                     "cervical/C4.glb",
+                                     "cervical/C5.glb",
+                                     "cervical/C6.glb",
+                                     "cervical/C7.glb"
+                                 ],
+                    "thoracic":  [
+                                     "thoracic/T1.glb",
+                                     "thoracic/T2.glb",
+                                     "thoracic/T3.glb",
+                                     "thoracic/T4.glb",
+                                     "thoracic/T5.glb",
+                                     "thoracic/T6.glb",
+                                     "thoracic/T7.glb",
+                                     "thoracic/T8.glb",
+                                     "thoracic/T9.glb",
+                                     "thoracic/T10.glb",
+                                     "thoracic/T11.glb",
+                                     "thoracic/T12.glb"
+                                 ],
+                    "lumbar":  [
+                                   "lumbar/L1.glb",
+                                   "lumbar/L2.glb",
+                                   "lumbar/L3.glb",
+                                   "lumbar/L4.glb",
+                                   "lumbar/L5.glb"
+                               ],
+                    "sacrum_coccyx":  [
+                                          "sacrum/sacrum-coccyx.glb"
+                                      ]
+                },
+    "model":  "Human Spine",
+    "source":  "NIH 3D"
+}
