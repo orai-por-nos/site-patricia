@@ -43,7 +43,7 @@ Home · Sobre · Serviços/Tratamentos · Diferenciais · Como atuo · Conteúdo
 - **Métricas do perfil:** 660 seguidores · 52 publicações (coletadas do embed oficial do perfil)
 - **Profissão:** Fisioterapeuta
 - **Serviços/áreas citados em posts:** Fisioterapia, Pilates (incluindo “Pilates avançado” e
-  “Pilates para bailarinos”), Osteopatia e **Recovery**
+  “Pilates para bailarinos”) e **Recovery**
 - **Abordagem divulgada em posts:** restaurar movimentos, prevenir lesões, melhorar a
   funcionalidade, tratamento da dor, reabilitação de lesões e **atendimento individualizado**
 - **Temas recorrentes dos posts:** tendinopatia/tendinite/tendinose/tenossinovite, gelo x calor,

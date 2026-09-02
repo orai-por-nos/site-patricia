@@ -9,7 +9,7 @@
 - DEFEITO ENCONTRADO e CORRIGIDO: erros de validação do formulário ficavam SEMPRE visíveis. Causa: `css/style.css` tinha `.field__error { display:flex }`, que sobrescreve o `display:none` do atributo `[hidden]` (o HTML nasce com `hidden`; `main.js:260` alterna a propriedade `.hidden`). Fix: `.field__error[hidden] { display:none; }` (style.css:512).
 - Verificação ao vivo (`node _cdp-check.mjs 390 844`): 3/3 erros com `hidden:true, display:none` por padrão; submit vazio → 3 erros; preenchido → 0 erros; WhatsApp deep-link abre; sem console errors; overflow 0.
 - `_cdp-check.mjs` ganhou verificação de regressão permanente `errorHiddenDefault` (exatamente o bug que passou batido antes).
-- Artefatos de captura (NÃO são defeitos do site): header sticky e botão back-top aparecem "flutuando" no meio da captura full-page (elementos fixed/sticky são costurados na posição do scroll durante o warmup).
+- Artefatos de captura (NÃO são defeitos do site): header fixo e botão back-top aparecem "flutuando" no meio da captura full-page porque elementos fixos são costurados na posição do scroll durante o warmup.
 
 ## Estado atual
 FASE 1 completa e verificada: M4/M5 (testes + validação inline), favicon (assets/favicon.svg, HTTP 200), nav, correção de overflow horizontal (0px), fix dos erros visíveis. Servidor rodando em localhost:3000.
@@ -18,11 +18,10 @@ Base: index.html, css/style.css, js/main.js, server.js (porta 3000).
 ## FASE 2 (NÃO INICIADA — aguarda aprovação do usuário)
 1. M3: faixa full-bleed
 2. M1: Especialidades assimétricas
-3. M2: sticky storytelling
+3. A antiga proposta de painéis presos foi removida; preservar o fluxo vertical natural.
 
 ## Ideias visuais abertas / decisões não resolvidas
-- Se/como intensificar ainda mais o scroll cinematográfico (ex.: cortinas, sticky storytelling)
-  SEM reintroduzir sensação de landing page tradicional.
+- Preservar apenas o movimento decorativo que não interfere na leitura nem no fluxo da página.
 - Imagem dedicada de og:image para compartilhamento.
 
 ## Restrições a lembrar sempre
@@ -44,7 +43,7 @@ Base: index.html, css/style.css, js/main.js, server.js (porta 3000).
 nenhuma alteração foi feita no site nesta sessão).
 
 ## Sessão 27/08/2026 (direção de arte/motion) — CONCLUÍDA
-- Parallax por cursor no hero, sobreposição real entre seções e scroll cinematográfico implementados e validados (ver progress.md).
+- Parallax por cursor no hero e microinterações decorativas implementados e validados; as seções seguem fluxo vertical contínuo.
 - Correção de legibilidade mobile: `.hero__chip--br` subiu de `bottom:8%` para `bottom:19%` em ≤920px — a caixa `.hero__media` inclui a figcaption e o chip cobria o nome "Patrícia Gomes".
 - Removida linha duplicada `.hero__chip { max-width:210px }` (vale só 185px em ≤480px).
 - Rede de segurança de reveal agora também roda no motor rAF (`renderFrame`, `performance.now() > 1600` → `revealVisibleNow()`), imune a ambientes com timers congelados.

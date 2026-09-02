@@ -80,11 +80,60 @@ try {
   await send('Page.navigate', { url: URL_TO_OPEN });
   await sleep(3200);
 
+  // Aguarda o carregamento dos 25 GLBs ou uma falha explícita da experiência 3D.
+  for (let i = 0; i < 80; i++) {
+    const state = await evalJs(`(() => {
+      const stage = document.getElementById('spineStage');
+      return stage && (stage.classList.contains('is-ready') || stage.classList.contains('has-error'));
+    })()`);
+    if (state) break;
+    await sleep(250);
+  }
+
   const results = {};
   results.consoleErrors = consoleErrors;
   results.exceptions = exceptions;
   results.overflow = await evalJs(`document.documentElement.scrollWidth - document.documentElement.clientWidth`);
   results.favicon = await evalJs(`fetch('/assets/favicon.svg').then(r => r.status)`);
+  results.anatomy = await evalJs(`(() => {
+    const stage = document.getElementById('spineStage');
+    const canvas = document.getElementById('spineCanvas');
+    const explode = document.getElementById('spineExplode');
+    const cervical = document.querySelector('[data-spine-region="cervical"]');
+    cervical.click();
+    explode.click();
+    const result = {
+      ready: stage.classList.contains('is-ready'),
+      failed: stage.classList.contains('has-error'),
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
+      controls: document.querySelectorAll('[data-spine-region]').length,
+      cervicalSelected: cervical.getAttribute('aria-pressed'),
+      exploded: explode.getAttribute('aria-pressed'),
+      loadingHidden: document.getElementById('spineLoading').hidden,
+      selection: document.getElementById('spineSelection').textContent.trim()
+    };
+    document.getElementById('spineReset').click();
+    return result;
+  })()`);
+  results.sectionFlow = await evalJs(`(() => {
+    const sections = [...document.querySelectorAll('#main > section')];
+    return {
+      count: sections.length,
+      ids: sections.map((section) => section.id),
+      positions: sections.map((section) => getComputedStyle(section).position),
+      marginsTop: sections.map((section) => getComputedStyle(section).marginTop),
+      naturalPositions: sections.every((section) => ['static', 'relative'].includes(getComputedStyle(section).position)),
+      noNegativeSectionMargins: sections.every((section) => parseFloat(getComputedStyle(section).marginTop) >= 0)
+    };
+  })()`);
+  if (!results.anatomy.ready && !results.anatomy.failed) {
+    results.anatomy.moduleProbe = await evalJs(`import('/js/spine-3d.js')
+      .then(() => 'module-imported')
+      .catch((error) => String(error && (error.stack || error.message || error)))`);
+    await sleep(1200);
+    results.anatomy.stateAfterProbe = await evalJs(`document.getElementById('spineStage').className`);
+  }
 
   // FASE 1 regression: erros de campo devem nascer ocultos (hidden + display:none)
   results.errorHiddenDefault = await evalJs(`['erro-nome', 'erro-whats', 'erro-mensagem'].map(id => {

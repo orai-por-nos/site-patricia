@@ -14,7 +14,7 @@
   validação inline sem alert(), WhatsApp deep-link funcional.
 
 ## FASE 2 — NÃO INICIADA (aguarda aprovação do usuário)
-- M3: faixa full-bleed [concluído] · M1: Especialidades assimétricas · M2: sticky storytelling.
+- M3: faixa full-bleed [concluído] · M1: Especialidades assimétricas. A antiga proposta de painéis presos foi descartada; o fluxo vertical deve permanecer natural.
 
 - Auditoria tipográfica/editorial (27/08/2026): hierarquia eyebrow + heading + editorial lead + supporting body em todas as seções, sem converter textos em cards. Tokens: `--text-lead`, `--lead-color`; classes `.section__eyebrow`, `.section__lead`, `form-lead`. Validado com `.shots/11-typo-full.png`, `12-typo-mobile.png`, `13-motion-sections.png`.
 - Segunda passagem de motion (27/08/2026): gestos estilo landing page removidos; remanescentes calibrados (amplitude/duração menores, easing calmo).
@@ -28,8 +28,8 @@
   marquee assinatura escuro.
 - Copy humanizada pt-BR derivada dos posts públicos; nada inventado (bio/formação/e-mail).
 - Camada Motion & Depth completa: parallax REAL de mouse no hero (tilt 3D + contra-movimento
-  interno da foto + halo respirante seguindo o cursor), placas sobrepostas nas transições
-  entre seções com curvas assimétricas variadas, parallax editorial dos números-fantasma,
+  interno da foto + halo respirante seguindo o cursor), fluxo contínuo entre as seções,
+  parallax editorial dos números-fantasma,
   reveals escalonados, tilt+spotlight nos cards, brilho no nav CTA, linha que desenha ao carregar.
 - Microinterações premium e scroll cinematográfico (rAF unificado, lerp do ponteiro).
 - Acessibilidade: prefers-reduced-motion desliga toda a camada; skip-link; ARIA correto.
@@ -39,7 +39,7 @@
   com crossfade na virada da hora.
 - Responsividade: breakpoints 1024/920/760/480 cobertos.
 - Servidor dev Node simples (server.js, porta 3000); README documenta fontes e decisões.
-- Validação visual final 27/08/2026: `8-full.png` (travessia marquee→Sobre intacta, contato sticky correto), `9-mobile-final.png` (primeira tela visível e chips limpos), `10-desktop-check.png` (hero desktop inalterado). Console sem erros; `node --check js/main.js` OK.
+- Validação visual final 27/08/2026: `8-full.png` (travessia marquee→Sobre intacta e contato íntegro), `9-mobile-final.png` (primeira tela visível e chips limpos), `10-desktop-check.png` (hero desktop inalterado). Console sem erros; `node --check js/main.js` OK.
 - Fix de legibilidade mobile: chip Instagram do hero não cobre mais a figcaption (≤920px, `bottom:19%`). Rede de segurança de reveal duplicada no motor rAF (imune a timers congelados).
 
 ## Pendente
@@ -59,6 +59,6 @@
 
 ## Decisões registradas
 - Não usar embed/API do Instagram: pool local + rotação horária determinística.
-- Placas de transição com ritmo propositalmente variado para fugir do padrão mecânico.
+- Fluxo vertical natural e contínuo, sem seções presas ou sobrepostas.
 - Em dashes reduzidos na copy (preferência consciente anti-estética-de-IA).
 - Crédito obrigatório no footer: “Site criado por Silvio Cesar · Todos os direitos autorais reservados”.

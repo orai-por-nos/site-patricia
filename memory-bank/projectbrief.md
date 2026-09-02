@@ -2,7 +2,7 @@
 
 ## O que é
 Site profissional de página única (one-page) de **Patrícia Gomes**, fisioterapeuta (Rio de Janeiro/RJ),
-atuando com **Fisioterapia, Pilates (avançado e para bailarinos), Osteopatia e Recovery**.
+atuando com **Fisioterapia, Pilates (avançado e para bailarinos) e Recovery**.
 
 Objetivo: presença profissional que transmita confiança e gere agendamentos via WhatsApp,
 apresentando o trabalho sem inventar credenciais ou informações não públicas.
@@ -24,7 +24,7 @@ apresentando o trabalho sem inventar credenciais ou informações não públicas
 3. **Evitar estética genérica de IA** (sem cara de template, visual robotizado ou gradientes genéricos).
 4. Copy em **português brasileiro humanizada**, com **uso reduzido de travessões (em dashes)**.
 5. **Parallax real baseado no mouse** na foto da Patrícia no hero (ponteiro fino/desktop, lerp suave).
-6. **Transições sobrepostas entre seções** (“placas” em camadas com curvas assimétricas avançando sobre a seção anterior).
+6. **Fluxo vertical natural entre seções**, sem painéis presos, pinning ou conteúdo sobreposto.
 7. Objetivo de **reduzir a sensação de landing page tradicional**: composição editorial, ritmo variado, profundidade.
 8. **Scroll cinematográfico, profundidade e microinterações premium** em toda a página.
 9. Rodapé obrigatório: “Site criado por Silvio Cesar · Todos os direitos autorais reservados”.

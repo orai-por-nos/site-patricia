@@ -58,8 +58,7 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 /* Em 360-390px, elementos que sangram de proposito (anéis do hero, halo,
-   drawer do menu fechado) nao devem gerar rolagem horizontal.
-   clip nao cria scroll container: position: sticky continua funcionando. */
+   drawer do menu fechado) nao devem gerar rolagem horizontal. */
 html, body { overflow-x: clip; }
 @supports not (overflow: clip) {
   html, body { overflow-x: hidden; }
@@ -339,19 +338,6 @@ ul, ol { list-style: none; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-.hero__3d {
-    width: 100%;
-    height: 20vh; /* desktop */
-    overflow: hidden;
-    background: transparent;
-    display: block;
-    position: relative;
-    z-index: 9;
-  }
-  @media (max-width: 1024px) {
-    .hero__3d { height: 15vh; } /* mobile */
-  }
-
 /* ===== Sobre ===== */
 .sobre { background: var(--cream); position: relative; z-index: 1; }
 .sobre__grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
@@ -444,6 +430,185 @@ ul, ol { list-style: none; }
   .diferenciais .section__eyebrow { flex-direction: row-reverse; justify-content: flex-end; }
 }
 .dif p { color: var(--ink-soft); font-size: var(--text-body-sm); line-height: 1.62; }
+
+/* ===== Anatomia em movimento ===== */
+.anatomia {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(201, 111, 74, 0.1), transparent 30%),
+    linear-gradient(145deg, var(--teal-050), var(--cream) 68%);
+}
+.anatomia::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.34;
+  background-image: radial-gradient(rgba(18, 60, 52, 0.14) 0.7px, transparent 0.7px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(90deg, transparent, #000 58%, #000);
+}
+.anatomia .section__ghost {
+  right: -0.03em;
+  left: auto;
+  top: -0.1em;
+  color: transparent;
+  -webkit-text-stroke-color: rgba(18, 60, 52, 0.09);
+}
+.anatomia__layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(420px, 1.12fr);
+  align-items: center;
+  gap: clamp(42px, 7vw, 100px);
+}
+.anatomia__copy { max-width: 610px; }
+.anatomia .section__title { max-width: 13ch; }
+.anatomia .section__title em { color: var(--terracotta-deep); }
+.anatomia .section__lead { max-width: 35ch; margin-top: 22px; }
+.anatomia__text { max-width: 54ch; margin-top: 18px; color: var(--ink-soft); font-size: var(--text-body-sm); }
+.anatomia__regions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 30px; }
+.anatomia__region,
+.anatomia__action {
+  appearance: none;
+  border: 1px solid rgba(18, 60, 52, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--teal-900);
+  font: 600 0.78rem/1 var(--font-body);
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: color 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.25s var(--ease-out);
+}
+.anatomia__region span { color: var(--terracotta-deep); margin-left: 5px; }
+.anatomia__region:hover,
+.anatomia__region.is-active,
+.anatomia__region[aria-pressed="true"] {
+  background: var(--teal-900);
+  border-color: var(--teal-900);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+.anatomia__region.is-active span,
+.anatomia__region[aria-pressed="true"] span { color: var(--teal-300); }
+.anatomia__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.anatomia__action {
+  border-radius: 12px;
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: var(--white);
+  padding: 13px 17px;
+}
+.anatomia__action:hover { background: var(--terracotta-dark); border-color: var(--terracotta-dark); transform: translateY(-1px); }
+.anatomia__action--quiet { background: transparent; color: var(--teal-900); border-color: rgba(18, 60, 52, 0.25); }
+.anatomia__action--quiet:hover { background: rgba(255,255,255,0.65); border-color: var(--teal-500); }
+.anatomia__source { margin-top: 17px; color: var(--ink-soft); font-size: 0.73rem; letter-spacing: 0.04em; }
+
+.anatomia__viewer { min-width: 0; }
+.anatomia__stage {
+  position: relative;
+  min-height: clamp(520px, 64vw, 680px);
+  overflow: hidden;
+  border-radius: clamp(26px, 4vw, 48px);
+  background:
+    radial-gradient(circle at 50% 34%, rgba(111, 169, 144, 0.24), transparent 28%),
+    radial-gradient(circle at 80% 76%, rgba(201, 111, 74, 0.14), transparent 30%),
+    linear-gradient(155deg, #17483f, #0a2924 74%);
+  box-shadow: 0 34px 72px rgba(18, 60, 52, 0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+  isolation: isolate;
+}
+.anatomia__stage::before,
+.anatomia__stage::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 50%;
+}
+.anatomia__stage::before { width: 72%; aspect-ratio: 1; left: 14%; top: 16%; }
+.anatomia__stage::after { width: 46%; aspect-ratio: 1; left: 27%; top: 29%; }
+#spineCanvas {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: pan-y;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease);
+}
+.anatomia__stage.is-ready #spineCanvas { opacity: 1; }
+#spineCanvas.is-dragging { cursor: grabbing; }
+#spineCanvas:focus-visible { outline: 3px solid var(--terracotta); outline-offset: -5px; }
+.anatomia__loading,
+.anatomia__fallback {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  padding: 30px;
+  text-align: center;
+  color: rgba(255,255,255,0.82);
+  font-size: 0.86rem;
+}
+.anatomia__loading[hidden], .anatomia__fallback[hidden] { display: none; }
+.anatomia__loader {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: var(--terracotta);
+  animation: anatomy-spin 0.9s linear infinite;
+}
+@keyframes anatomy-spin { to { transform: rotate(360deg); } }
+.anatomia__fallback { max-width: 40ch; margin: auto; line-height: 1.6; }
+.anatomia__hint {
+  position: absolute;
+  z-index: 4;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255,255,255,0.58);
+  font-size: 0.69rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.anatomia__selection {
+  margin: 16px 4px 0;
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1rem;
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .anatomia__layout { grid-template-columns: 1fr; }
+  .anatomia__copy { max-width: 760px; }
+  .anatomia .section__title { max-width: 16ch; }
+  .anatomia__stage { min-height: 620px; }
+}
+@media (max-width: 600px) {
+  .anatomia__layout { gap: 34px; }
+  .anatomia__stage { min-height: 520px; border-radius: 26px; }
+  .anatomia__regions { gap: 7px; }
+  .anatomia__region { font-size: 0.73rem; padding: 10px 12px; }
+  .anatomia__actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .anatomia__action { padding-inline: 10px; }
+  .anatomia__hint { left: 16px; right: 16px; font-size: 0.6rem; }
+}
 
 /* ===== Como atuo (linha do tempo) ===== */
 .metodo { background: var(--teal-900); color: var(--cream); overflow: hidden; position: relative; }
@@ -819,54 +984,6 @@ ul, ol { list-style: none; }
 .js .accent-line { animation: draw-line 1.15s var(--ease-out) 0.95s forwards; }
 @keyframes draw-line { to { stroke-dashoffset: 0; } }
 
-/* ===== 3. Transições entre seções — placas sobrepostas ===== */
-/*
-   Ritmo escolhido (variação proposital, sem virar padrão):
-   sobre (plana) → servicos AVANÇA como selo arredondado
-   → diferenciais (plana editorial) → metodo (base escura)
-   → conteudo SOBRE a base escura (contraste máximo de profundidade)
-   → insta como folha assimétrica → contato avança com arco.
-*/
-.servicos,
-.conteudo,
-.insta,
-.contato {
-  position: relative;
-  z-index: 2;
-}
-
-.servicos {
-  margin-top: clamp(-88px, -8vw, -52px);
-  border-radius: clamp(48px, 8vw, 92px) clamp(26px, 4.5vw, 50px) 0 0;
-  box-shadow:
-    0 -30px 70px rgba(18, 60, 52, 0.13),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  padding-top: calc(clamp(76px, 11vw, 140px) + 34px);
-}
-
-.metodo { padding-bottom: calc(clamp(76px, 11vw, 140px) + 96px); }
-
-.conteudo {
-  margin-top: clamp(-92px, -8.5vw, -56px);
-  border-radius: clamp(34px, 6vw, 64px) clamp(54px, 9.5vw, 100px) 0 0;
-  box-shadow: 0 -32px 64px rgba(6, 32, 27, 0.38);
-  padding-top: calc(clamp(76px, 11vw, 140px) + 34px);
-}
-
-.insta {
-  margin-top: clamp(-56px, -5vw, -34px);
-  border-radius: clamp(44px, 10vw, 112px) clamp(22px, 4vw, 40px) 0 0;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  padding-top: calc(clamp(76px, 11vw, 140px) + 26px);
-}
-
-.contato {
-  margin-top: clamp(-76px, -7vw, -46px);
-  border-radius: clamp(30px, 5.5vw, 56px) clamp(48px, 8.5vw, 90px) 0 0;
-  box-shadow: 0 -26px 58px rgba(18, 60, 52, 0.12);
-  padding-top: calc(clamp(76px, 11vw, 140px) + 34px);
-}
-
 /* números-fantasma ganham deriva sutil (profundidade editorial) */
 .section__ghost { will-change: transform; }
 
@@ -875,17 +992,6 @@ ul, ol { list-style: none; }
 /* cards de tratamentos: inclinação discreta guiada por JS */
 .card { will-change: transform; }
 .card::after {
-/* ===== Hero 3D canvas (replaces faixa full-bleed) ===== */
-.hero__3d {
-   width: 100%;
-   height: 20vh; /* desktop */
-   overflow: hidden;
-   background: var(--cream);
-   display: block;
-}
-@media (max-width: 1024px) {
-   .hero__3d { height: 15vh; } /* mobile */
-}
   content: "";
   position: absolute;
   inset: 0;
@@ -933,19 +1039,6 @@ ul, ol { list-style: none; }
 .nav__cta { transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease-out); }
 .nav__cta:hover { transform: translateY(-1px); }
 
-/* ===== 5. Responsividade da nova camada ===== */
-@media (max-width: 920px) {
-  /* menos invasão vertical no mobile, mesma sensação de camadas */
-  .servicos  { margin-top: -36px; border-radius: 38px 22px 0 0; }
-  .conteudo  { margin-top: -40px; border-radius: 30px 44px 0 0; }
-  .insta     { margin-top: -24px; border-radius: 34px 18px 0 0; }
-  .contato   { margin-top: -30px; border-radius: 24px 36px 0 0; }
-  .metodo    { padding-bottom: calc(clamp(64px, 9vw, 96px) + 56px); }
-  .servicos, .conteudo, .insta, .contato { padding-top: calc(clamp(64px, 9vw, 96px) + 22px); }
-}
-
-/* ===== 7. Ritmo cinematografico: momentos pegajosos pontuais ===== */
-
 /* amplitudes de saida reduzidas no tablet/mobile (legibilidade primeiro) */
 @media (max-width: 920px) {
   .hero {
@@ -955,20 +1048,10 @@ ul, ol { list-style: none; }
   }
 }
 
-/* UNICO momento sticky da pagina (ponto de maior impacto, desktop):
-   o painel escuro de contato fica fixo enquanto o formulario passa */
-@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
-  .contato__panel {
-    position: sticky;
-    top: 96px;
-    align-self: start;
-    height: -moz-fit-content;
-    height: fit-content;
-  }
-}
-
 /* ===== 6. Redução de movimento: toda a camada desliga ===== */
 @media (prefers-reduced-motion: reduce) {
+  #spineCanvas { transition: none; }
+  .anatomia__loader { animation: none; }
   .hero__media,
   .hero__figure,
   .hero__arch img,
@@ -985,11 +1068,5 @@ ul, ol { list-style: none; }
   .hero__chip--br { animation: none !important; }
   .marquee__track { animation-play-state: paused !important; }
   .js .accent-line { animation: none; stroke-dashoffset: 0; }
-  .servicos, .conteudo, .insta, .contato {
-    margin-top: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .contato__panel { position: static; }
   .card::after { display: none; }
 }

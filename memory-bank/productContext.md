@@ -2,7 +2,7 @@
 
 ## Propósito
 Página profissional de apresentação e captação de pacientes para Patrícia Gomes,
-fisioterapeuta (Fisioterapia, Pilates avançado, Pilates para bailarinos, Osteopatia, Recovery).
+fisioterapeuta (Fisioterapia, Pilates avançado, Pilates para bailarinos e Recovery).
 A ação principal desejada é conversar/agendar pelo WhatsApp.
 
 ## Público

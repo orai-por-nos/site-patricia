@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patrícia Gomes · Fisioterapia, Pilates e Osteopatia</title>
-  <meta name="description" content="Patrícia Gomes é fisioterapeuta e atende com Fisioterapia, Pilates (avançado e para bailarinos), Osteopatia e Recovery. Atendimento individualizado no Rio de Janeiro." />
-  <meta property="og:title" content="Patrícia Gomes · Fisioterapia, Pilates e Osteopatia" />
-  <meta property="og:description" content="Cuidar do corpo para que ele continue fazendo o que ama. Fisioterapia, Pilates, Osteopatia e Recovery com atendimento individualizado." />
+  <title>Patrícia Gomes · Fisioterapia e Pilates</title>
+  <meta name="description" content="Patrícia Gomes é fisioterapeuta e atende com Fisioterapia, Pilates (avançado e para bailarinos) e Recovery. Atendimento individualizado no Rio de Janeiro." />
+  <meta property="og:title" content="Patrícia Gomes · Fisioterapia e Pilates" />
+  <meta property="og:description" content="Cuidar do corpo para que ele continue fazendo o que ama. Fisioterapia, Pilates e Recovery com atendimento individualizado." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
   <meta property="og:image" content="assets/img/avatar-hd.jpg" />
@@ -15,7 +15,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-<script src="https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.min.js"></script>
+  <script type="importmap">
+    {"imports":{"three":"./js/vendor/three/three.module.min.js"}}
+  </script>
   <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
 <body>
@@ -55,7 +57,7 @@
 
       <div class="container hero__grid">
         <div class="hero__copy">
-          <p class="hero__eyebrow" data-reveal style="--rd:0.02s"><svg class="eyebrow-star" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg>Fisioterapia · Pilates · Osteopatia</p>
+          <p class="hero__eyebrow" data-reveal style="--rd:0.02s"><svg class="eyebrow-star" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg>Fisioterapia · Pilates · Recovery</p>
           <h1 class="hero__title" data-reveal style="--rd:0.14s">
             Cuidar do corpo para que ele continue
             <span class="hero__accent">fazendo o que ama.
@@ -98,8 +100,6 @@
       </div>
       <span class="hero__scroll" aria-hidden="true">Role</span>
     </section>
-<canvas class="hero__3d" id="hero3d" aria-hidden="true"></canvas>
-
     <!-- ===== MARQUEE (assinatura) ===== -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee__track">
@@ -107,14 +107,12 @@
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Fisioterapia</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Pilates avançado</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Pilates para bailarinos</span>
-          <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Osteopatia</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Recovery</span>
         </div>
         <div class="marquee__group">
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Fisioterapia</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Pilates avançado</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Pilates para bailarinos</span>
-          <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Osteopatia</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Recovery</span>
         </div>
       </div>
@@ -153,7 +151,6 @@
         <li>Fisioterapia</li>
         <li>Pilates avançado</li>
         <li>Pilates para bailarinos</li>
-        <li>Osteopatia</li>
         <li>Recovery</li>
       </ul>
     </section>
@@ -186,16 +183,8 @@
               <a class="card__link" href="https://wa.me/5521982338381" target="_blank" rel="noopener">Agendar <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </article>
-          <article class="card" data-reveal data-tilt style="--rd:0.2s">
-            <div class="card__index" aria-hidden="true">03</div>
-            <div class="card__body">
-              <h3>Osteopatia</h3>
-              <p>Uma abordagem manual que investiga a origem da dor e da disfunção, ajudando o corpo a recuperar equilíbrio e mobilidade.</p>
-              <a class="card__link" href="https://wa.me/5521982338381" target="_blank" rel="noopener">Agendar <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            </div>
-          </article>
           <article class="card" data-reveal data-tilt style="--rd:0.3s">
-            <div class="card__index" aria-hidden="true">04</div>
+            <div class="card__index" aria-hidden="true">03</div>
             <div class="card__body">
               <h3>Recovery</h3>
               <p>Técnicas de recuperação para ajudar o corpo a se restabelecer depois de treinos, esforços e atividades intensas.</p>
@@ -223,7 +212,7 @@
           <article class="dif" data-reveal>
             <span class="dif__num" aria-hidden="true">02</span>
             <h3>Olhar amplo sobre o movimento</h3>
-            <p>Fisioterapia, Pilates, Osteopatia e Recovery combinados para tratar a origem do problema e prevenir novas lesões.</p>
+            <p>Fisioterapia, Pilates e Recovery combinados para tratar a origem do problema e prevenir novas lesões.</p>
           </article>
           <article class="dif" data-reveal>
             <span class="dif__num" aria-hidden="true">03</span>
@@ -235,6 +224,49 @@
             <h3>Foco em resultados duradouros</h3>
             <p>Restaurar o movimento, melhorar a funcionalidade e devolver segurança para que o cuidado faça parte da sua rotina.</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ANATOMIA EM MOVIMENTO ===== -->
+    <section class="anatomia section" id="anatomia" aria-labelledby="anatomia-title">
+      <span class="section__ghost" aria-hidden="true">25</span>
+      <div class="container anatomia__layout">
+        <div class="anatomia__copy" data-reveal>
+          <p class="section__eyebrow">Anatomia em movimento</p>
+          <h2 class="section__title" id="anatomia-title">Entender o corpo também faz parte do <em>cuidado</em>.</h2>
+          <p class="section__lead">Explore a coluna vertebral e conheça as regiões que trabalham juntas em cada movimento.</p>
+          <p class="anatomia__text">Arraste para girar, toque em uma região para destacá-la ou afaste as estruturas para observar cada parte com mais clareza.</p>
+
+          <div class="anatomia__regions" role="group" aria-label="Destacar região da coluna">
+            <button type="button" class="anatomia__region is-active" data-spine-region="all" aria-pressed="true">Coluna completa</button>
+            <button type="button" class="anatomia__region" data-spine-region="cervical" aria-pressed="false">Cervical <span>7</span></button>
+            <button type="button" class="anatomia__region" data-spine-region="thoracic" aria-pressed="false">Torácica <span>12</span></button>
+            <button type="button" class="anatomia__region" data-spine-region="lumbar" aria-pressed="false">Lombar <span>5</span></button>
+            <button type="button" class="anatomia__region" data-spine-region="sacrum_coccyx" aria-pressed="false">Sacro e cóccix <span>1</span></button>
+          </div>
+
+          <div class="anatomia__actions">
+            <button type="button" class="anatomia__action" id="spineExplode" aria-pressed="false">Separar regiões</button>
+            <button type="button" class="anatomia__action anatomia__action--quiet" id="spineReset">Restaurar posição</button>
+          </div>
+          <p class="anatomia__source">Modelo anatômico 3D: NIH 3D.</p>
+        </div>
+
+        <div class="anatomia__viewer" data-reveal="scale" style="--rd:0.12s">
+          <div class="anatomia__stage" id="spineStage">
+            <canvas id="spineCanvas" tabindex="0" aria-label="Modelo tridimensional interativo da coluna vertebral. Use as setas para girar e mais ou menos para aproximar ou afastar."></canvas>
+            <div class="anatomia__loading" id="spineLoading" role="status" aria-live="polite">
+              <span class="anatomia__loader" aria-hidden="true"></span>
+              <span id="spineLoadingText">Preparando anatomia 3D…</span>
+            </div>
+            <p class="anatomia__fallback" id="spineFallback" hidden>Não foi possível carregar a visualização 3D. O restante do site continua disponível normalmente.</p>
+            <div class="anatomia__hint" aria-hidden="true">
+              <span>Arraste para girar</span>
+              <span>Toque para explorar</span>
+            </div>
+          </div>
+          <p class="anatomia__selection" id="spineSelection" aria-live="polite">Coluna completa · 25 estruturas</p>
         </div>
       </div>
     </section>
@@ -414,7 +446,6 @@
                 <option value="Agendar avaliação">Agendar avaliação</option>
                 <option value="Fisioterapia">Fisioterapia</option>
                 <option value="Pilates">Pilates</option>
-                <option value="Osteopatia">Osteopatia</option>
                 <option value="Recovery">Recovery</option>
                 <option value="Outro">Outro</option>
               </select>
@@ -443,7 +474,7 @@
       <div class="footer__inner">
         <div>
           <p class="footer__brand">Patrícia Gomes</p>
-          <p class="footer-tag">Fisioterapia · Pilates · Osteopatia · Recovery</p>
+          <p class="footer-tag">Fisioterapia · Pilates · Recovery</p>
         </div>
         <div class="footer__social">
           <a href="https://wa.me/5521982338381" target="_blank" rel="noopener">WhatsApp</a>
@@ -457,5 +488,6 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script type="module" src="js/spine-3d.js?v=20260901-2"></script>
 </body>
 </html>

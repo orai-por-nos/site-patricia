@@ -17,18 +17,15 @@ escalonados inline (--rd:0.08s etc.), revelados por IntersectionObserver adicion
    a img dá contra-movimento interno (-5px/-4px, scale 1.05 = sensação de lente),
    halo quente (radial-gradient terracota/verde) segue o cursor e respira (halo-breathe 6s).
 2. Linha manuscrita SVG do título desenha ao carregar (stroke-dashoffset, animação draw-line 1.15s, delay 0.95s).
-3. Transições sobrepostas entre seções (“placas”): servicos/conteudo/insta/contato sobem com
-   margin-top negativo, border-radius assimétrico grande e box-shadow sobre a seção anterior.
-   Ritmo propositalmente variado: sobre (plana) → servicos avança como selo arredondado →
-   diferenciais plana → metodo base escura → conteudo SOBRE a base escura (contraste máximo)
-   → insta como folha assimétrica → contato avança com arco.
+3. Fluxo vertical natural: todas as seções ocupam a própria altura e seguem a ordem do documento,
+   sem margens negativas, pinning, alturas artificiais ou cobertura do conteúdo anterior.
 4. Microinterações: tilt discreto nos cards [data-tilt] (perspective 850px, ±2.4°) + spotlight
    radial que segue o cursor (::after com --cx/--cy), underline crescente em card__link,
    overlay do Instagram com texto+ícone subindo juntos, brilho lateral no nav CTA,
    back-top com leve rotação no hover.
-5. Responsividade da camada: <920px as placas são menos invasivas (mesma sensação, menor overshoot).
-6. prefers-reduced-motion: reduce → TUDO desliga (transforms none, halo display:none,
-   placas viram blocos planos sem margem negativa, animação da linha desativada).
+5. Responsividade da camada: amplitudes decorativas são reduzidas abaixo de 920px.
+6. prefers-reduced-motion: reduce → movimentos decorativos desligam (transforms none,
+   halo display:none e animação da linha desativada).
 
 ## Padrões JS (main.js)
 - Loop rAF unificado: onScroll marca dirty e um único renderFrame cuida de nav--scrolled,

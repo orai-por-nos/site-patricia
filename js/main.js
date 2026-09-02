@@ -28,63 +28,9 @@
   var pt = { x: 0, y: 0, cx: 0, cy: 0 };
   var lastHp = -1;
   var scrollYState = 0;
-  var faixa = document.querySelector('.faixa');
-  var faixaX = 0, faixaY = 0, faixaX2 = 0, faixaY2 = 0;
   var ghostEls = [].slice.call(document.querySelectorAll('.section__ghost')).map(function (el) {
     return { el: el, top: 0, h: 1, speed: parseFloat(el.getAttribute('data-lag')) || 0.22 };
   });
-// === Hero 3D (Three.js) ===
-var threeReady = false;
-var scene, camera, renderer, mesh, clock;
-if (typeof THREE !== 'undefined') {
-  try {
-    var canvas = document.querySelector('.hero__3d');
-    if (canvas) {
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-      renderer.setClearColor(0x000000, 0); // transparent
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-      camera.position.set(0, 0, 3);
-      
-      // lighting
-      var hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
-      hemiLight.position.set(0, 20, 0);
-      scene.add(hemiLight);
-      var dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-      dirLight.position.set(5, 10, 7);
-      scene.add(dirLight);
-      
-      // geometry: tube with CatmullRomCurve3
-      var points = [
-        new THREE.Vector3(-2, 0, -2),
-        new THREE.Vector3(-1, 0,  1),
-        new THREE.Vector3( 1, 0,  2),
-        new THREE.Vector3( 2, 0, -1),
-        new THREE.Vector3(-2, 0, -2) // close loop
-      ];
-      var curve = new THREE.CatmullRomCurve3(points, true); // closed
-      var tubeGeometry = new THREE.TubeGeometry(curve, 64, 0.3, 8, false);
-      var material = new THREE.MeshStandardMaterial({ color: 0x6fa990, metalness: 0.2, roughness: 0.4 });
-      mesh = new THREE.Mesh(tubeGeometry, material);
-      scene.add(mesh);
-      
-      clock = new THREE.Clock();
-      threeReady = true;
-      
-      window.addEventListener('resize', function () {
-        if (!threeReady) return;
-        var w = canvas.clientWidth;
-        var h = canvas.clientHeight;
-        renderer.setSize(w, h);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-      });
-    }
-  } catch (e) {
-    console.warn('Three.js init failed', e);
-  }
 
   /* ---- Nav fixa com sombra + link ativo + back-top ao rolar ---- */
   var ticking = false;
@@ -181,41 +127,6 @@ if (typeof THREE !== 'undefined') {
       revealVisibleNow();
     }
 
-    // Faixa full-bleed parallax (M3)
-    if (faixa) {
-      if (!prefersReduced) {
-        var scrollProgress = scrollYState / (document.body.scrollHeight - window.innerHeight);
-        if (scrollProgress < 0) scrollProgress = 0;
-        if (scrollProgress > 1) scrollProgress = 1;
-        // lerp smooth
-        faixaX += (scrollProgress - faixaX) * 0.075;
-        faixaY += (scrollProgress * 0.5 - faixaY) * 0.075;
-        faixaX2 += (scrollProgress * 0.3 - faixaX2) * 0.075;
-        faixaY2 += (scrollProgress * 0.7 - faixaY2) * 0.075;
-        faixa.style.setProperty('--faixa-x', (faixaX * 100) + 'vw');
-        faixa.style.setProperty('--faixa-y', (faixaY * 100) + 'vh');
-        faixa.style.setProperty('--faixa-x2', (faixaX2 * 100) + 'vw');
-        faixa.style.setProperty('--faixa-y2', (faixaY2 * 100) + 'vh');
-      } else {
-        faixa.style.setProperty('--faixa-x', '0');
-        faixa.style.setProperty('--faixa-y', '0');
-        faixa.style.setProperty('--faixa-x2', '0');
-        faixa.style.setProperty('--faixa-y2', '0');
-      }
-    }
-// === Hero 3D update ===
-  if (threeReady) {
-    if (!prefersReduced) {
-      var delta = clock.getDelta();
-      mesh.rotation.y += delta * 0.2;
-      mesh.scale.set(
-        1 + Math.sin(clock.getElapsedTime() * 0.5) * 0.05,
-        1 + Math.cos(clock.getElapsedTime() * 0.3) * 0.05,
-        1
-      );
-    }
-    renderer.render(scene, camera);
-  }
     window.requestAnimationFrame(renderFrame);
   }
 
