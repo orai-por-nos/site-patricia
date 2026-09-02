@@ -95,25 +95,76 @@ try {
   results.exceptions = exceptions;
   results.overflow = await evalJs(`document.documentElement.scrollWidth - document.documentElement.clientWidth`);
   results.favicon = await evalJs(`fetch('/assets/favicon.svg').then(r => r.status)`);
+  await evalJs(`(() => {
+    document.getElementById('spineCanvas').scrollIntoView({ block: 'center' });
+    document.querySelector('[data-spine-region="cervical"]').click();
+    return true;
+  })()`);
+  await sleep(350);
+  const canvasRect = await evalJs(`(() => {
+    const rect = document.getElementById('spineCanvas').getBoundingClientRect();
+    return { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
+  })()`);
+  const centerX = canvasRect.x + canvasRect.width * 0.5;
+  const centerY = canvasRect.y + canvasRect.height * 0.5;
+  const anatomyBefore = await evalJs(`window.__anatomyViewer?.getDiagnostics()`);
+
+  // Amostra o canvas e aciona a mesma rotina de Raycaster usada pelo clique.
+  await evalJs(`(() => {
+    const canvas = document.getElementById('spineCanvas');
+    const rect = canvas.getBoundingClientRect();
+    const viewer = window.__anatomyViewer;
+    for (const x of [0.5, 0.46, 0.54, 0.42, 0.58]) {
+      for (const y of [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74]) {
+        if (viewer.pickAtClientPoint(rect.left + rect.width * x, rect.top + rect.height * y)) return true;
+      }
+    }
+    return false;
+  })()`);
+  const anatomyAfterRaycast = await evalJs(`window.__anatomyViewer?.getDiagnostics()`);
+
+  // Teclado usa o mesmo estado de rotação do arraste e é determinístico no CDP.
+  await evalJs(`document.getElementById('spineCanvas').focus()`);
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'ArrowRight', code: 'ArrowRight', windowsVirtualKeyCode: 39 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'ArrowRight', code: 'ArrowRight', windowsVirtualKeyCode: 39 });
+  await sleep(450);
+  const anatomyAfterRotation = await evalJs(`window.__anatomyViewer?.getDiagnostics()`);
+
+  // Zoom por teclado confirma a alternativa acessível e o mesmo cameraDistance da roda.
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: '+', code: 'Equal', windowsVirtualKeyCode: 187 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: '+', code: 'Equal', windowsVirtualKeyCode: 187 });
+  await sleep(450);
+  const anatomyAfterZoom = await evalJs(`window.__anatomyViewer?.getDiagnostics()`);
+
   results.anatomy = await evalJs(`(() => {
     const stage = document.getElementById('spineStage');
     const canvas = document.getElementById('spineCanvas');
     const explode = document.getElementById('spineExplode');
     const cervical = document.querySelector('[data-spine-region="cervical"]');
-    cervical.click();
     explode.click();
+    const explodedState = window.__anatomyViewer?.getDiagnostics();
+    const cervicalSelected = cervical.getAttribute('aria-pressed');
+    const explodedPressed = explode.getAttribute('aria-pressed');
+    const selectionBeforeReset = document.getElementById('spineSelection').textContent.trim();
+    document.getElementById('spineReset').click();
+    const resetState = window.__anatomyViewer?.getDiagnostics();
     const result = {
       ready: stage.classList.contains('is-ready'),
       failed: stage.classList.contains('has-error'),
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
       controls: document.querySelectorAll('[data-spine-region]').length,
-      cervicalSelected: cervical.getAttribute('aria-pressed'),
-      exploded: explode.getAttribute('aria-pressed'),
+      cervicalSelected,
+      exploded: explodedPressed,
       loadingHidden: document.getElementById('spineLoading').hidden,
-      selection: document.getElementById('spineSelection').textContent.trim()
+      selection: selectionBeforeReset,
+      before: ${JSON.stringify(anatomyBefore)},
+      afterRaycast: ${JSON.stringify(anatomyAfterRaycast)},
+      afterRotation: ${JSON.stringify(anatomyAfterRotation)},
+      afterZoom: ${JSON.stringify(anatomyAfterZoom)},
+      explodedState,
+      resetState
     };
-    document.getElementById('spineReset').click();
     return result;
   })()`);
   results.sectionFlow = await evalJs(`(() => {

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "defaultSet": "spine",
+  "sets": [
+    {
+      "id": "spine",
+      "label": "Coluna",
+      "enabled": true,
+      "manifest": "assets/models/spine/spine-manifest.json",
+      "expectedParts": 25,
+      "source": "NIH 3D"
+    }
+  ]
+}
