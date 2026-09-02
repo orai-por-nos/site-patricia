@@ -383,7 +383,7 @@ ul, ol { list-style: none; }
 .sobre__chip strong, .sobre__chip b { display: block; font-family: var(--font-display); font-size: 1.1rem; color: var(--teal-900); }
 .sobre__chip small { color: var(--ink-soft); font-size: 0.8rem; }
 
-.sobre__tags { margin-top: clamp(40px, 6vw, 64px); display: flex; flex-wrap: wrap; gap: 12px; }
+.sobre__tags { margin-top: clamp(40px, 6vw, 64px); display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .sobre__tags li { background: var(--white); border: 1px solid var(--teal-100); color: var(--teal-700); padding: 11px 20px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; transition: transform 0.3s var(--ease-out), border-color 0.3s, background 0.3s; }
 .sobre__tags li:hover { transform: translateY(-2px); border-color: var(--teal-500); background: var(--teal-050); }
 
