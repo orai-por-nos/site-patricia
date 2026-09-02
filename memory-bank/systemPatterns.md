@@ -5,6 +5,9 @@ One-page estática vanilla. Três arquivos principais: index.html (estrutura+con
 css/style.css (design tokens em :root, componentes, responsividade e MOTION & DEPTH LAYER),
 js/main.js (IIFE única com todos os comportamentos). Sem estado global além das variáveis da IIFE.
 
+## Convenção editorial de serviços
+Usar “RPG” em áreas compactas e “RPG – Método Souchard” em cards, explicações e contexto detalhado.
+
 ## Convenções CSS (BEM-like)
 Blocos: nav, hero, marquee, sobre, servicos/card, diferenciais/dif, metodo/metodo__step,
 conteudo/tema, insta/insta__item, contato, footer. Modificadores com -- (ex.: hero__chip--tl).

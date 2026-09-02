@@ -1,5 +1,10 @@
 ﻿# Progress · Site Patrícia Gomes
 
+## CORREÇÃO EDITORIAL — RPG (02/09/2026)
+- RPG – Método Souchard incluído em metadata, Hero, marquee, Sobre, Especialidades, Diferenciais,
+  formulário e footer, conforme confirmação editorial da responsável pelo projeto.
+- Nenhuma lógica, configuração ou asset da experiência anatômica 3D foi alterado.
+
 ## FASE 1 — COMPLETA e VERIFICADA (27/08/2026)
 - Scroll-warmup adicionado ao `_cdp-shot.mjs` (percorre a página antes do captureBeyondViewport
   para disparar todos os IntersectionObserver `[data-reveal]`). Blank areas em full-page eram

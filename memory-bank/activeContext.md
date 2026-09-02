@@ -1,6 +1,6 @@
 ﻿# Active Context · Site Patrícia Gomes
 
-Última atualização: 28/08/2026 — Implementada M3 faixa full-bleed com parallax scroll-driven usando apenas CSS transforms e JS (requestAnimationFrame, lerp), respeitando prefers-reduced-motion e acessibilidade.
+Última atualização: 02/09/2026 — Incluído RPG – Método Souchard como formação/abordagem confirmada editorialmente. Em áreas compactas, usar “RPG”; em explicações, usar o nome completo. A arquitetura e os assets anatômicos permanecem intocados.
 
 ## Sessão 27/08/2026 (verificação FASE 1 · captura scrolled + fix de erros visíveis) — CONCLUÍDA
 - `_cdp-shot.mjs`: adicionado modo scroll-warmup (percorre a página antes do captureBeyondViewport para disparar todos os IntersectionObserver `[data-reveal]`). Motivo: em full-page sem scroll, seções abaixo da dobra ficam `opacity:0` — artefato de captura, não defeito de layout.

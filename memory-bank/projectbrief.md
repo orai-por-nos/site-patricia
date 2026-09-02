@@ -2,7 +2,7 @@
 
 ## O que é
 Site profissional de página única (one-page) de **Patrícia Gomes**, fisioterapeuta (Rio de Janeiro/RJ),
-atuando com **Fisioterapia, Pilates (avançado e para bailarinos) e Recovery**.
+atuando com **Fisioterapia, Pilates (avançado e para bailarinos), Recovery e RPG – Método Souchard**.
 
 Objetivo: presença profissional que transmita confiança e gere agendamentos via WhatsApp,
 apresentando o trabalho sem inventar credenciais ou informações não públicas.
@@ -10,6 +10,7 @@ apresentando o trabalho sem inventar credenciais ou informações não públicas
 ## Fonte da verdade de conteúdo
 - Tudo baseado **somente** em informação pública do Instagram @fisio.patriciagomes
   (660 seguidores · 52 publicações na coleta; bio literal inacessível sem login, portanto NÃO usada).
+- **RPG – Método Souchard** foi confirmado editorialmente pela responsável pelo projeto.
 - Imagens reais baixadas do perfil público (assets/img/).
 - Nada foi inventado: sem e-mail, horários ou lista formal de serviços (ela não publica isso).
 

@@ -1,8 +1,9 @@
-# Site — Patrícia Gomes · Fisioterapia & Pilates
+# Site — Patrícia Gomes · Fisioterapia, Pilates & RPG
 
 Página profissional e responsiva construída para a fisioterapeuta **Patrícia Gomes**, a partir
-**somente** das informações publicamente disponíveis no perfil público do Instagram
-**[@fisio.patriciagomes](https://www.instagram.com/fisio.patriciagomes/)**.
+das informações publicamente disponíveis no perfil público do Instagram
+**[@fisio.patriciagomes](https://www.instagram.com/fisio.patriciagomes/)** e das confirmações
+editoriais fornecidas pela responsável pelo projeto.
 
 ## Como rodar
 
@@ -44,6 +45,7 @@ Home · Sobre · Serviços/Tratamentos · Diferenciais · Como atuo · Conteúdo
 - **Profissão:** Fisioterapeuta
 - **Serviços/áreas citados em posts:** Fisioterapia, Pilates (incluindo “Pilates avançado” e
   “Pilates para bailarinos”) e **Recovery**
+- **Formação/abordagem confirmada editorialmente:** **RPG – Método Souchard**
 - **Abordagem divulgada em posts:** restaurar movimentos, prevenir lesões, melhorar a
   funcionalidade, tratamento da dor, reabilitação de lesões e **atendimento individualizado**
 - **Temas recorrentes dos posts:** tendinopatia/tendinite/tendinose/tenossinovite, gelo x calor,
