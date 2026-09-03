@@ -32,6 +32,137 @@
     return { el: el, top: 0, h: 1, speed: parseFloat(el.getAttribute('data-lag')) || 0.22 };
   });
 
+  /* ---- Hero cinematográfico: playlist progressiva com crossfade em duas camadas ---- */
+  var heroVideoShell = hero && hero.querySelector('.hero__video');
+  var heroVideoLayers = heroVideoShell
+    ? [].slice.call(heroVideoShell.querySelectorAll('.hero__video-layer'))
+    : [];
+  var heroVideoSources = [
+    'assets/videos/01.mp4',
+    'assets/videos/02.mp4',
+    'assets/videos/03.mp4',
+    'assets/videos/04.mp4',
+    'assets/videos/05.mp4'
+  ];
+
+  function initHeroVideo() {
+    if (!heroVideoShell || heroVideoLayers.length !== 2) return;
+
+    var activeSlot = 0;
+    var currentIndex = 0;
+    var transitioning = false;
+    var fadeDuration = 1250;
+
+    function configureVideo(video) {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+    }
+
+    function safePlay(video) {
+      var playAttempt;
+      try { playAttempt = video.play(); } catch (error) { return Promise.reject(error); }
+      return playAttempt && typeof playAttempt.then === 'function'
+        ? playAttempt
+        : Promise.resolve();
+    }
+
+    function loadIntoSlot(slot, sourceIndex) {
+      var video = heroVideoLayers[slot];
+      configureVideo(video);
+      video.dataset.sourceIndex = String(sourceIndex);
+      video.preload = 'auto';
+      if (video.getAttribute('src') !== heroVideoSources[sourceIndex]) {
+        video.src = heroVideoSources[sourceIndex];
+      }
+      video.load();
+    }
+
+    function prepareNext() {
+      loadIntoSlot(1 - activeSlot, (currentIndex + 1) % heroVideoSources.length);
+    }
+
+    function finishTransition(previousSlot, nextSlot, nextIndex) {
+      window.setTimeout(function () {
+        var previous = heroVideoLayers[previousSlot];
+        previous.pause();
+        previous.removeAttribute('src');
+        previous.removeAttribute('data-source-index');
+        previous.preload = 'none';
+        previous.load();
+        activeSlot = nextSlot;
+        currentIndex = nextIndex;
+        transitioning = false;
+        prepareNext();
+      }, fadeDuration);
+    }
+
+    function transitionToNext() {
+      if (transitioning || prefersReduced) return;
+      var previousSlot = activeSlot;
+      var nextSlot = 1 - activeSlot;
+      var previous = heroVideoLayers[previousSlot];
+      var next = heroVideoLayers[nextSlot];
+      var nextIndex = parseInt(next.dataset.sourceIndex || '', 10);
+
+      if (!Number.isFinite(nextIndex)) {
+        prepareNext();
+        return;
+      }
+      if (next.readyState < 2) {
+        next.addEventListener('canplay', transitionToNext, { once: true });
+        return;
+      }
+
+      transitioning = true;
+      next.currentTime = 0;
+      safePlay(next).then(function () {
+        next.classList.add('is-active');
+        previous.classList.remove('is-active');
+        finishTransition(previousSlot, nextSlot, nextIndex);
+      }).catch(function () {
+        transitioning = false;
+        heroVideoShell.classList.add('has-playback-fallback');
+      });
+    }
+
+    heroVideoLayers.forEach(function (video, slot) {
+      configureVideo(video);
+      video.addEventListener('timeupdate', function () {
+        if (slot !== activeSlot || transitioning || !Number.isFinite(video.duration)) return;
+        if (video.duration - video.currentTime <= 1.4) transitionToNext();
+      });
+      video.addEventListener('ended', transitionToNext);
+      video.addEventListener('error', function () {
+        if (slot === activeSlot) heroVideoShell.classList.add('has-playback-fallback');
+      });
+    });
+
+    var first = heroVideoLayers[0];
+    first.dataset.sourceIndex = '0';
+    if (prefersReduced) {
+      first.autoplay = false;
+      first.removeAttribute('autoplay');
+      first.pause();
+    }
+    function revealFirstFrame() {
+      heroVideoShell.classList.add('is-ready');
+      if (prefersReduced) {
+        first.pause();
+        return;
+      }
+      safePlay(first).then(prepareNext).catch(function () {
+        heroVideoShell.classList.add('has-playback-fallback');
+      });
+    }
+    first.addEventListener('loadeddata', revealFirstFrame, { once: true });
+    if (first.readyState >= 2) revealFirstFrame();
+  }
+
+  initHeroVideo();
+
   /* ---- Nav fixa com sombra + link ativo + back-top ao rolar ---- */
   var ticking = false;
   function onScroll() {
