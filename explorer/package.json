@@ -1,0 +1,21 @@
+{
+  "name": "patricia-human-body-explorer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "three": "0.159.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.9",
+    "typescript": "5.9.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "0.159.0"
+  }
+}

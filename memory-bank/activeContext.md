@@ -61,3 +61,8 @@ nenhuma alteração foi feita no site nesta sessão).
 - Itens 1–3 dos antigos "Próximos passos" (chave extra no CSS, favicon, validação inline do formulário)
   foram concluídos na FASE 1 e revalidados nesta sessão: favicon HTTP 200, validação inline ativa
   e sem alert(), overflow horizontal 0px. Restam os itens de acervo do Instagram e og:image dedicada.
+
+## Integração Human Body Explorer (07/09/2026)
+- A coluna 3D legada foi substituída pelo Human Atlas/BodyParts3D.
+- O Hero e sua direção visual foram preservados.
+- A experiência carrega sob demanda e oferece músculos, ossos, explosão, busca, seleção, isolamento e vistas frontal, traseira e lateral.

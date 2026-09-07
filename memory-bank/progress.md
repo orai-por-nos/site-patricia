@@ -67,3 +67,11 @@
 - Fluxo vertical natural e contínuo, sem seções presas ou sobrepostas.
 - Em dashes reduzidos na copy (preferência consciente anti-estética-de-IA).
 - Crédito obrigatório no footer: “Site criado por Silvio Cesar · Todos os direitos autorais reservados”.
+
+## HUMAN BODY EXPLORER — IMPLEMENTADO E VALIDADO (07/09/2026)
+- Integração baseada no `ashemag/human-atlas`, com 2.234 meshes BodyParts3D.
+- Carregamento iniciado por “Explorar corpo”, sem disputar a carga inicial do Hero.
+- Controles para músculos, ossos, separação, vistas, busca, seleção, isolamento e restauração.
+- Interface responsiva, foco visível, teclado e movimento reduzido; renderização suspensa fora da viewport.
+- Créditos MIT e BodyParts3D CC BY 4.0 incluídos.
+- TypeScript, build, sintaxe e interações verificadas em desktop e 390×844.

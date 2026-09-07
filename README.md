@@ -86,3 +86,7 @@ Home · Sobre · Serviços/Tratamentos · Diferenciais · Como atuo · Conteúdo
 - **Instagram dinâmico:** o mosaico é reorganizado deterministicamente por hora (seed = hora
   atual, PRNG mulberry32), com crossfade na virada enquanto a página fica aberta.
 - **Rodapé:** site criado por **Silvio Cesar** — todos os direitos autorais reservados.
+
+## Human Body Explorer
+
+A seção “Anatomia em movimento” usa o Human Atlas/BodyParts3D com 2.234 estruturas. O módulo carrega sob demanda e oferece músculos, ossos, vista explodida, busca, seleção e isolamento. Para recompilar: `cd explorer`, `npm install` e `npm run build`. Créditos em `assets/models/human-atlas/ATTRIBUTION.md`.

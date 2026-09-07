@@ -1,0 +1,47 @@
+/* Scoped to the anatomy explorer; the established site and Hero keep their styles. */
+.hbe { position: relative; margin-top: 2.5rem; border: 1px solid #c8d5cc; border-radius: 22px; overflow: hidden; background: #faf6ef; color: #123c34; }
+.hbe button, .hbe input, .hbe select { font: inherit; }
+.hbe button { cursor: pointer; min-height: 44px; padding: .65rem 1rem; border: 1px solid #819f90; border-radius: 8px; background: transparent; color: #123c34; transition: background .18s; }
+.hbe button:hover:not(:disabled) { background: #e3ece4; }
+.hbe button:disabled { opacity: .5; cursor: default; }
+.hbe :is(button,input,select,canvas):focus-visible { outline: 3px solid #9d4f2a; outline-offset: 3px; }
+.hbe-welcome { padding: clamp(2rem,6vw,5rem); background: radial-gradient(ellipse at 90% 20%,#dfe9df,transparent 60%),#f1e9db; }
+.hbe-kicker { font: 600 .66rem/1.6 Inter,sans-serif; letter-spacing: .13em; color: #516d60; }
+.hbe h3 { font-family: Fraunces,serif; font-weight: 400; line-height: 1.15; }
+.hbe-welcome h3 { font-size: clamp(2.2rem,5vw,4rem); margin: 1rem 0; }
+.hbe-welcome p { max-width: 38rem; margin-bottom: 1.5rem; }
+.hbe .btn--primary { background: #123c34; color: #faf6ef; border-color: #123c34; }
+.hbe .btn--primary:hover:not(:disabled) { background: #24594c; }
+.hbe-download { font-size: .75rem; margin-top: 1rem; color: #516357; }
+.hbe-toolbar { display: flex; justify-content: space-between; align-items: center; gap: .75rem; padding: 1rem; border-bottom: 1px solid #c8d5cc; }
+.hbe-tabs, .hbe-views { display: flex; gap: .4rem; }
+.hbe button[aria-pressed=true] { background: #123c34; color: #faf6ef; border-color: #123c34; }
+.hbe-layout { display: grid; grid-template-columns: minmax(0,1fr) 310px; }
+.hbe-stage { position: relative; height: 690px; min-width: 0; background: #f1e9db; overflow: hidden; }
+.hbe-scene { width: 100%; height: 100%; position: relative; }
+.hbe-scene canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.hbe-panel { padding: 1.5rem; border-left: 1px solid #c8d5cc; min-width: 0; }
+.hbe-explode label { display: flex; justify-content: space-between; font-size: .8rem; font-weight: 600; gap: .5rem; }
+.hbe-explode input { width: 100%; min-height: 44px; accent-color: #9d4f2a; }
+.hbe-range-labels { display: flex; justify-content: space-between; font-size: .65rem; color: #516357; }
+.hbe-views { margin: 1rem 0; }
+.hbe-views button { flex: 1; padding: .5rem; font-size: .75rem; }
+.hbe-detail { padding: 1.2rem 0; border-top: 1px solid #c8d5cc; border-bottom: 1px solid #c8d5cc; margin-bottom: 1rem; }
+.hbe-detail h3 { font-size: 1.6rem; margin: .65rem 0; overflow-wrap: anywhere; }
+.hbe-detail p { font-size: .8rem; margin: .6rem 0; }
+.hbe-detail button { width: 100%; margin-top: .5rem; }
+.hbe-search-label { display: block; font-size: .8rem; font-weight: 600; margin-bottom: .4rem; }
+.hbe input[type=search], .hbe select { width: 100%; max-width: 100%; min-height: 44px; padding: .5rem; background: #fffdf8; border: 1px solid #819f90; border-radius: 5px; font-size: .8rem; color: #123c34; }
+.hbe-small { display: block; font-size: .7rem; color: #516357; line-height: 1.6; margin: .6rem 0; }
+.hbe-reset { margin-top: 1rem; width: 100%; font-size: .8rem!important; }
+.hbe-message { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; background: #f1e9db; }
+.hbe-message h3 { font-size: 2rem; margin: 1rem 0; }
+.hbe-message progress { width: min(260px,100%); height: 8px; accent-color: #123c34; margin: 1rem 0; }
+.hbe-stage-note { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; text-align: center; font-size: .7rem; pointer-events: none; color: #314d41; }
+.hbe-hover { position: absolute; background: #123c34; color: #faf6ef; padding: .5rem .7rem; border-radius: 5px; font-size: .75rem; max-width: 250px; pointer-events: none; z-index: 2; }
+.hbe-hover[hidden] { display: none; }
+.hbe-credit { font-size: .68rem; line-height: 1.7; margin-top: 1rem; color: #516357; }
+.hbe-credit a { text-decoration: underline; }
+@media(max-width: 760px) { .hbe-layout { grid-template-columns: 1fr; } .hbe-stage { height: 520px; } .hbe-panel { border-left: 0; border-top: 1px solid #c8d5cc; } .hbe-toolbar { flex-wrap: wrap; padding: .75rem; } .hbe-toolbar button { font-size: .75rem; padding: .55rem .7rem; } }
+@media(max-width: 380px) { .hbe-stage { height: 440px; } .hbe-toolbar { gap: .5rem; } .hbe-close { width: 100%; } }
+@media(prefers-reduced-motion: reduce) { .hbe * { transition: none!important; } }

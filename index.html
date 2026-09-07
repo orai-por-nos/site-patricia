@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/human-body.css" />
   <script type="importmap">
     {"imports":{"three":"./js/vendor/three/three.module.min.js"}}
   </script>
@@ -93,6 +94,10 @@
               <span>Fisioterapeuta</span>
             </figcaption>
           </figure>
+          <div class="hero__chip hero__chip--tl" aria-hidden="true">
+            <span class="chip-ico"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>
+            <div><strong>Atendimento</strong><small>individualizado</small></div>
+          </div>
           <div class="hero__chip hero__chip--br" aria-hidden="true">
             <span class="chip-ico"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
             <div><strong>@fisio.patriciagomes</strong><small>Instagram</small></div>
@@ -242,44 +247,23 @@
 
     <!-- ===== ANATOMIA EM MOVIMENTO ===== -->
     <section class="anatomia section" id="anatomia" aria-labelledby="anatomia-title">
-      <span class="section__ghost" aria-hidden="true">25</span>
-      <div class="container anatomia__layout">
+      <div class="container">
         <div class="anatomia__copy" data-reveal>
           <p class="section__eyebrow">Anatomia em movimento</p>
           <h2 class="section__title" id="anatomia-title">Entender o corpo também faz parte do <em>cuidado</em>.</h2>
-          <p class="section__lead">Explore a coluna vertebral e conheça as regiões que trabalham juntas em cada movimento.</p>
-          <p class="anatomia__text">Arraste para girar, toque em uma região para destacá-la ou afaste as estruturas para observar cada parte com mais clareza.</p>
-
-          <div class="anatomia__regions" role="group" aria-label="Destacar região da coluna">
-            <button type="button" class="anatomia__region is-active" data-spine-region="all" aria-pressed="true">Coluna completa</button>
-            <button type="button" class="anatomia__region" data-spine-region="cervical" aria-pressed="false">Cervical <span>7</span></button>
-            <button type="button" class="anatomia__region" data-spine-region="thoracic" aria-pressed="false">Torácica <span>12</span></button>
-            <button type="button" class="anatomia__region" data-spine-region="lumbar" aria-pressed="false">Lombar <span>5</span></button>
-            <button type="button" class="anatomia__region" data-spine-region="sacrum_coccyx" aria-pressed="false">Sacro e cóccix <span>1</span></button>
-          </div>
-
-          <div class="anatomia__actions">
-            <button type="button" class="anatomia__action" id="spineExplode" aria-pressed="false">Separar regiões</button>
-            <button type="button" class="anatomia__action anatomia__action--quiet" id="spineReset">Restaurar posição</button>
-          </div>
-          <p class="anatomia__source">Modelo anatômico 3D: NIH 3D.</p>
+          <p class="section__lead">Explore o corpo humano, descubra músculos e ossos e observe como cada estrutura faz parte do todo.</p>
         </div>
-
-        <div class="anatomia__viewer" data-reveal="scale" style="--rd:0.12s">
-          <div class="anatomia__stage" id="spineStage">
-            <canvas id="spineCanvas" tabindex="0" aria-label="Modelo tridimensional interativo da coluna vertebral. Use as setas para girar e mais ou menos para aproximar ou afastar."></canvas>
-            <div class="anatomia__loading" id="spineLoading" role="status" aria-live="polite">
-              <span class="anatomia__loader" aria-hidden="true"></span>
-              <span id="spineLoadingText">Preparando anatomia 3D…</span>
-            </div>
-            <p class="anatomia__fallback" id="spineFallback" hidden>Não foi possível carregar a visualização 3D. O restante do site continua disponível normalmente.</p>
-            <div class="anatomia__hint" aria-hidden="true">
-              <span>Arraste para girar</span>
-              <span>Toque para explorar</span>
-            </div>
+        <div id="humanBodyExplorer" class="hbe" aria-label="Explorador do corpo humano">
+          <div class="hbe-welcome">
+            <span class="hbe-kicker">UM NOVO OLHAR SOBRE O MOVIMENTO</span>
+            <h3>Do corpo inteiro<br>ao menor detalhe.</h3>
+            <p>Gire o corpo, separe as estruturas e escolha uma parte para conhecê-la de perto.</p>
+            <button type="button" class="btn btn--primary" id="humanBodyStart">Explorar corpo <span aria-hidden="true">↗</span></button>
+            <p class="hbe-download">A experiência 3D carrega ao abrir. Download inicial de aproximadamente 33 MB.</p>
+            <p id="humanBodyStatus" role="status" aria-live="polite"></p>
           </div>
-          <p class="anatomia__selection" id="spineSelection" aria-live="polite">Coluna completa · 25 estruturas</p>
         </div>
+        <p class="hbe-credit">Modelo de referência masculino adulto · Uso educativo.<br>Human Atlas (MIT) · BodyParts3D, © The Database Center for Life Science, CC BY 4.0. <a href="assets/models/human-atlas/ATTRIBUTION.md" target="_blank" rel="noopener">Fontes e adaptações</a></p>
       </div>
     </section>
 
@@ -501,6 +485,6 @@
   </footer>
 
   <script src="js/main.js"></script>
-  <script type="module" src="js/spine-3d.js?v=20260902-1"></script>
+  <script type="module" src="js/human-body-loader.js"></script>
 </body>
 </html>
