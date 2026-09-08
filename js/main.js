@@ -523,6 +523,53 @@
     return arr;
   }
 
+  /* ---- Conteúdo dinâmico: os temas mudam de hora em hora ---- */
+  var CONTENT_POOL = [
+    { title: 'Tendinopatia, tendinite, tendinose e tenossinovite', text: 'Termos que costumam aparecer como sinônimos, mas descrevem condições diferentes. Explico tudo de forma simples e baseada em evidências, para que você entenda melhor o que está acontecendo com o seu corpo.' },
+    { title: 'Gelo x calor', text: 'Quando usar cada um e em quais situações, de forma prática, para cuidar do sintoma no momento certo.' },
+    { title: 'Tempo de cicatrização dos tecidos', text: 'Cada tecido tem um tempo próprio de regeneração. Comparar a sua evolução com a de outra pessoa costuma atrasar mais do que ajudar.' },
+    { title: 'Reabilitação e prevenção de lesões', text: 'Restaurar o movimento, melhorar a funcionalidade e devolver segurança para as atividades do dia a dia.' },
+    { title: 'Dor lombar e movimento', text: 'A dor lombar pede contexto: rotina, sono, carga e movimento. Entender esses fatores ajuda a escolher um caminho seguro para melhorar.' },
+    { title: 'Como voltar a treinar depois de uma lesão', text: 'A volta acontece por etapas. Progressão de carga, qualidade do movimento e recuperação caminham juntas para reduzir o risco de novas pausas.' },
+    { title: 'Pilates e consciência corporal', text: 'Respiração, controle e força se encontram para melhorar a percepção do corpo e dar mais confiança para se movimentar.' },
+    { title: 'Postura no trabalho', text: 'Não existe uma postura perfeita o dia inteiro. Alternar posições e fazer pausas curtas costuma ser mais útil do que tentar ficar imóvel.' }
+  ];
+  var contentFeatured = document.querySelector('.conteudo__grid .tema--featured');
+  var contentSide = document.querySelectorAll('.conteudo__grid .tema__side .tema');
+  var contentItems = contentFeatured ? [contentFeatured].concat(Array.prototype.slice.call(contentSide)) : [];
+
+  function applyContentRotation(withFade) {
+    if (contentItems.length < 4) return;
+    var order = shuffledIndexes(hourSeed() + 7919, CONTENT_POOL.length);
+    contentItems.forEach(function (item, slotIdx) {
+      var pick = CONTENT_POOL[order[slotIdx]];
+      var title = item.querySelector('h3');
+      var text = item.querySelector('p');
+      if (!title || !text) return;
+      var update = function () {
+        title.textContent = pick.title;
+        text.textContent = pick.text;
+        item.style.opacity = '';
+      };
+      if (withFade && !prefersReduced) {
+        item.style.opacity = '0.15';
+        setTimeout(update, 220 + slotIdx * 45);
+      } else update();
+    });
+  }
+
+  var lastContentHour = hourSeed();
+  if (contentItems.length >= 4) {
+    applyContentRotation(false);
+    setInterval(function () {
+      var nowHour = hourSeed();
+      if (nowHour !== lastContentHour) {
+        lastContentHour = nowHour;
+        applyContentRotation(true);
+      }
+    }, 60000);
+  }
+
   function applyInstaRotation(withFade) {
     if (!instaItems.length) return;
     var order = shuffledIndexes(hourSeed(), instaItems.length);
