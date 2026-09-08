@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#e7f0e9"/>
+  <circle cx="860" cy="230" r="220" fill="#c96f4a" opacity=".22"/>
+  <circle cx="160" cy="870" r="170" fill="#2e7d6b" opacity=".18"/>
+  <path d="M205 805c92-170 256-255 452-236 63 6 128 27 190 64" fill="none" stroke="#1e5a4e" stroke-width="12" stroke-linecap="round"/>
+  <path d="M330 720c30-103 98-186 195-238M510 482c-18 95-2 177 48 246" fill="none" stroke="#c96f4a" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+  <text x="88" y="140" fill="#c96f4a" font-family="Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="6">ROTINA DE CUIDADO</text>
+  <text x="88" y="292" fill="#0f3d35" font-family="Georgia,serif" font-size="82" font-weight="700">Seu corpo</text>
+  <text x="88" y="388" fill="#0f3d35" font-family="Georgia,serif" font-size="82" font-weight="700">fala com você.</text>
+  <text x="88" y="540" fill="#31554b" font-family="Arial,sans-serif" font-size="34">Preste atenção aos sinais.</text>
+  <text x="88" y="596" fill="#31554b" font-family="Arial,sans-serif" font-size="34">O cuidado começa na escuta.</text>
+  <text x="88" y="955" fill="#1e5a4e" font-family="Arial,sans-serif" font-size="27" letter-spacing="3">PATRÍCIA GOMES · FISIOTERAPEUTA</text>
+</svg>
