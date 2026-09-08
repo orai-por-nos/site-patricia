@@ -489,7 +489,10 @@
     { src: 'assets/img/post4.webp', pos: '50% 38%' },
     { src: 'assets/img/post5.webp', pos: '50% 34%' },
     { src: 'assets/img/post6.webp', pos: '52% 40%' },
-    { src: 'assets/img/post7.webp', pos: '48% 38%' }
+    { src: 'assets/img/post7.webp', pos: '48% 38%' },
+    { src: 'assets/img/post8.svg', pos: '50% 50%' },
+    { src: 'assets/img/post9.svg', pos: '50% 50%' },
+    { src: 'assets/img/post10.svg', pos: '50% 50%' }
   ];
   var instaItems = document.querySelectorAll('.insta__mosaic .insta__item');
   var lastInstaHour = hourSeed();
@@ -572,11 +575,17 @@
 
   function applyInstaRotation(withFade) {
     if (!instaItems.length) return;
-    var order = shuffledIndexes(hourSeed(), instaItems.length);
+    var order = shuffledIndexes(hourSeed(), INSTA_POOL.length);
     instaItems.forEach(function (item, slotIdx) {
       var img = item.querySelector('img');
       if (!img) return;
-      var pick = INSTA_POOL[order[slotIdx] % INSTA_POOL.length];
+      var pickIndex = order[slotIdx];
+      if (typeof pickIndex === 'undefined') {
+        item.hidden = true;
+        return;
+      }
+      item.hidden = false;
+      var pick = INSTA_POOL[pickIndex];
       if (img.getAttribute('src') === pick.src &&
           (img.style.objectPosition || '') === pick.pos) return;
 
