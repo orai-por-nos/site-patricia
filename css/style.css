@@ -1284,3 +1284,24 @@ ul, ol { list-style: none; }
   .hero__video-layer:not(:first-child) { display: none; }
   .js .hero__title.in .hero__accent { animation: none; opacity: 1; transform: none; }
 }
+
+/* Hero: retrato difuso e chip de atendimento alinhado ao Instagram. */
+#home .hero__arch { overflow: visible; background: transparent; border-radius: 0; box-shadow: none; }
+#home .hero__arch::after {
+  content: "";
+  position: absolute;
+  inset: 7% 5% 4%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 54%, rgba(10, 41, 36, 0.34) 89%, rgba(10, 41, 36, 0.7) 100%);
+  filter: blur(16px);
+}
+#home .hero__arch img {
+  position: relative;
+  z-index: 0;
+  border: 0;
+  border-radius: 0;
+  -webkit-mask-image: radial-gradient(ellipse 73% 79% at 50% 47%, #000 52%, transparent 82%);
+  mask-image: radial-gradient(ellipse 73% 79% at 50% 47%, #000 52%, transparent 82%);
+}
+#home .hero__chip--tl { top: auto; bottom: 15%; left: -4%; }
