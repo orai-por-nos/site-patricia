@@ -1308,7 +1308,7 @@ ul, ol { list-style: none; }
   z-index: 0;
   border: 0;
   border-radius: 0;
-  -webkit-mask-image: radial-gradient(ellipse 69% 76% at 50% 46%, #000 38%, rgba(0, 0, 0, 0.94) 51%, transparent 76%);
-  mask-image: radial-gradient(ellipse 69% 76% at 50% 46%, #000 38%, rgba(0, 0, 0, 0.94) 51%, transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 66% 73% at 50% 47%, #000 28%, rgba(0, 0, 0, 0.94) 44%, transparent 65%);
+  mask-image: radial-gradient(ellipse 66% 73% at 50% 47%, #000 28%, rgba(0, 0, 0, 0.94) 44%, transparent 65%);
 }
 #home .hero__chip--tl { top: auto; bottom: 15%; left: -4%; }
