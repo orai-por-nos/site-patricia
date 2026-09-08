@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#f2e8da"/>
+  <rect x="62" y="62" width="956" height="956" rx="38" fill="none" stroke="#1e5a4e" stroke-width="3" opacity=".35"/>
+  <path d="M840 110c-90 80-150 180-170 300M925 185c-88 36-165 96-230 224" fill="none" stroke="#c96f4a" stroke-width="10" stroke-linecap="round" opacity=".65"/>
+  <circle cx="175" cy="870" r="128" fill="#6fa990" opacity=".48"/>
+  <text x="108" y="150" fill="#c96f4a" font-family="Arial,sans-serif" font-size="26" font-weight="700" letter-spacing="6">CUIDADO COM O CORPO</text>
+  <text x="108" y="290" fill="#0f3d35" font-family="Georgia,serif" font-size="86" font-weight="700">Alongar</text>
+  <text x="108" y="388" fill="#0f3d35" font-family="Georgia,serif" font-size="86" font-weight="700">também é ouvir.</text>
+  <text x="108" y="535" fill="#31554b" font-family="Arial,sans-serif" font-size="34">Sem pressa, sem forçar.</text>
+  <text x="108" y="592" fill="#31554b" font-family="Arial,sans-serif" font-size="34">Respeite o tempo do seu corpo.</text>
+  <path d="M130 770c110-90 235-96 344-12" fill="none" stroke="#1e5a4e" stroke-width="9" stroke-linecap="round"/>
+  <text x="108" y="940" fill="#1e5a4e" font-family="Arial,sans-serif" font-size="29" letter-spacing="3">FISIOTERAPIA · PILATES · RPG</text>
+</svg>

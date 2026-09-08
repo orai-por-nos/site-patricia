@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#0f3d35"/>
+  <circle cx="880" cy="190" r="250" fill="#2e7d6b" opacity=".45"/>
+  <circle cx="130" cy="930" r="290" fill="#c96f4a" opacity=".5"/>
+  <path d="M180 780c90-130 110-250 80-370 150 70 245 188 250 356" fill="none" stroke="#f8f1e8" stroke-width="22" stroke-linecap="round" opacity=".85"/>
+  <path d="M510 765c15-115 4-235-48-355M510 765c86-70 159-163 185-286" fill="none" stroke="#f8f1e8" stroke-width="18" stroke-linecap="round" opacity=".85"/>
+  <circle cx="256" cy="383" r="42" fill="#f8f1e8"/>
+  <text x="82" y="130" fill="#e19a74" font-family="Arial,sans-serif" font-size="28" font-weight="700" letter-spacing="7">MOVIMENTO NO DIA A DIA</text>
+  <text x="82" y="235" fill="#f8f1e8" font-family="Georgia,serif" font-size="78" font-weight="700">Pequenas pausas</text>
+  <text x="82" y="320" fill="#f8f1e8" font-family="Georgia,serif" font-size="78" font-weight="700">fazem diferença.</text>
+  <text x="82" y="965" fill="#f8f1e8" font-family="Arial,sans-serif" font-size="30" letter-spacing="2">Levante · respire · mova-se</text>
+</svg>
