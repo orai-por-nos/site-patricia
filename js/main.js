@@ -51,7 +51,13 @@
     var activeSlot = 0;
     var currentIndex = 0;
     var transitioning = false;
+    var nextPrepared = false;
+    var waitingForNext = false;
     var fadeDuration = 1250;
+    var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var lowDataVideo = Boolean(
+      connection && (connection.saveData || /(^|-)2g$/.test(connection.effectiveType || ''))
+    );
 
     function configureVideo(video) {
       video.muted = true;
@@ -81,7 +87,9 @@
     }
 
     function prepareNext() {
+      if (nextPrepared || lowDataVideo || prefersReduced) return;
       loadIntoSlot(1 - activeSlot, (currentIndex + 1) % heroVideoSources.length);
+      nextPrepared = true;
     }
 
     function finishTransition(previousSlot, nextSlot, nextIndex) {
@@ -95,12 +103,13 @@
         activeSlot = nextSlot;
         currentIndex = nextIndex;
         transitioning = false;
-        prepareNext();
+        nextPrepared = false;
+        waitingForNext = false;
       }, fadeDuration);
     }
 
     function transitionToNext() {
-      if (transitioning || prefersReduced) return;
+      if (transitioning || prefersReduced || lowDataVideo) return;
       var previousSlot = activeSlot;
       var nextSlot = 1 - activeSlot;
       var previous = heroVideoLayers[previousSlot];
@@ -112,7 +121,13 @@
         return;
       }
       if (next.readyState < 2) {
-        next.addEventListener('canplay', transitionToNext, { once: true });
+        if (!waitingForNext) {
+          waitingForNext = true;
+          next.addEventListener('canplay', function () {
+            waitingForNext = false;
+            transitionToNext();
+          }, { once: true });
+        }
         return;
       }
 
@@ -132,7 +147,9 @@
       configureVideo(video);
       video.addEventListener('timeupdate', function () {
         if (slot !== activeSlot || transitioning || !Number.isFinite(video.duration)) return;
-        if (video.duration - video.currentTime <= 1.4) transitionToNext();
+        var remaining = video.duration - video.currentTime;
+        if (remaining <= Math.max(4.5, video.duration * 0.45)) prepareNext();
+        if (remaining <= 1.4) transitionToNext();
       });
       video.addEventListener('ended', transitionToNext);
       video.addEventListener('error', function () {
@@ -142,23 +159,51 @@
 
     var first = heroVideoLayers[0];
     first.dataset.sourceIndex = '0';
-    if (prefersReduced) {
+    if (prefersReduced || lowDataVideo) {
       first.autoplay = false;
       first.removeAttribute('autoplay');
+      first.preload = 'metadata';
       first.pause();
     }
     function revealFirstFrame() {
       heroVideoShell.classList.add('is-ready');
-      if (prefersReduced) {
+      if (prefersReduced || lowDataVideo) {
         first.pause();
         return;
       }
-      safePlay(first).then(prepareNext).catch(function () {
+      safePlay(first).catch(function () {
         heroVideoShell.classList.add('has-playback-fallback');
       });
     }
     first.addEventListener('loadeddata', revealFirstFrame, { once: true });
     if (first.readyState >= 2) revealFirstFrame();
+
+    if ('IntersectionObserver' in window) {
+      var playbackObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var activeVideo = heroVideoLayers[activeSlot];
+          if (!activeVideo || prefersReduced || lowDataVideo) return;
+          if (entry.isIntersecting) {
+            safePlay(activeVideo).catch(function () {
+              heroVideoShell.classList.add('has-playback-fallback');
+            });
+          } else {
+            heroVideoLayers.forEach(function (video) { video.pause(); });
+          }
+        });
+      }, { threshold: 0.08 });
+      playbackObserver.observe(hero);
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      var activeVideo = heroVideoLayers[activeSlot];
+      if (!activeVideo || prefersReduced || lowDataVideo) return;
+      if (document.hidden) {
+        heroVideoLayers.forEach(function (video) { video.pause(); });
+      } else if (hero.getBoundingClientRect().bottom > 0) {
+        safePlay(activeVideo).catch(function () {});
+      }
+    });
   }
 
   initHeroVideo();
@@ -289,31 +334,57 @@
   var toggle = document.getElementById('navToggle');
   var links = navLinks;
 
-  function closeMenu() {
+  var mobileMenuQuery = window.matchMedia('(max-width: 760px)');
+
+  function syncMenuAccessibility() {
+    if (!links) return;
+    var closedOnMobile = mobileMenuQuery.matches && !links.classList.contains('open');
+    if (closedOnMobile) links.setAttribute('inert', '');
+    else links.removeAttribute('inert');
+  }
+
+  function closeMenu(restoreFocus) {
     if (links && links.classList) {
       links.classList.remove('open');
+      document.body.classList.remove('menu-open');
       if (toggle) {
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-label', 'Abrir menu');
+        if (restoreFocus) toggle.focus();
       }
+      syncMenuAccessibility();
     }
   }
 
   if (toggle && links) {
+    syncMenuAccessibility();
     toggle.addEventListener('click', function () {
-      var open = links.classList.toggle('open');
+      var open = !links.classList.contains('open');
+      links.classList.toggle('open', open);
+      document.body.classList.toggle('menu-open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+      syncMenuAccessibility();
+      if (open) {
+        var firstLink = links.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }
     });
     links.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', closeMenu);
+      a.addEventListener('click', function () { closeMenu(false); });
     });
     document.addEventListener('click', function (e) {
       if (links.classList.contains('open') &&
           !links.contains(e.target) && !toggle.contains(e.target)) {
-        closeMenu();
+        closeMenu(false);
       }
     });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && links.classList.contains('open')) closeMenu(true);
+    });
+    if (mobileMenuQuery.addEventListener) {
+      mobileMenuQuery.addEventListener('change', function () { closeMenu(false); });
+    }
   }
 
   /* ---- Voltar ao topo ---- */
@@ -378,12 +449,10 @@
   if (form) {
     var inputs = {
       nome: document.getElementById('nome'),
-      whats: document.getElementById('whats'),
       mensagem: document.getElementById('mensagem')
     };
     var errEls = {
       nome: document.getElementById('erro-nome'),
-      whats: document.getElementById('erro-whats'),
       mensagem: document.getElementById('erro-mensagem')
     };
 
@@ -401,12 +470,7 @@
       else input.removeAttribute('aria-invalid');
     }
 
-    function setWhatsMessage(txt) {
-      var span = errEls.whats && errEls.whats.querySelector('span');
-      if (span) span.textContent = txt;
-    }
-
-    ['nome', 'whats', 'mensagem'].forEach(function (name) {
+    ['nome', 'mensagem'].forEach(function (name) {
       var input = inputs[name];
       if (!input) return;
       var clear = function () { setFieldError(name, false); };
@@ -417,7 +481,6 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var nome = ((inputs.nome && inputs.nome.value) || '').trim();
-      var whats = ((inputs.whats && inputs.whats.value) || '').trim();
       var assuntoEl = document.getElementById('assunto');
       var assunto = (assuntoEl && assuntoEl.value) || '';
       var mensagem = ((inputs.mensagem && inputs.mensagem.value) || '').trim();
@@ -426,17 +489,6 @@
 
       if (!nome) invalid.push('nome');
       else setFieldError('nome', false);
-
-      var digits = whats.replace(/\D/g, '');
-      if (!whats) {
-        setWhatsMessage('Preciso do seu WhatsApp para responder.');
-        invalid.push('whats');
-      } else if (digits.length < 10 || digits.length > 13) {
-        setWhatsMessage('Digite um WhatsApp válido, com DDD.');
-        invalid.push('whats');
-      } else {
-        setFieldError('whats', false);
-      }
 
       if (!mensagem) invalid.push('mensagem');
       else setFieldError('mensagem', false);
@@ -450,7 +502,6 @@
 
       var texto =
         'Olá, Patrícia! Me chamo ' + nome + '.\n' +
-        'WhatsApp: ' + whats + '\n' +
         'Assunto: ' + assunto + '\n' +
         'Mensagem: ' + mensagem;
 
