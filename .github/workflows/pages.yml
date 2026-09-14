@@ -119,18 +119,18 @@ jobs:
 
             await page.screenshot({ path: 'visual-audit/' + name + '.png', fullPage: true });
 
-            if (name === 'desktop') {
+            {
               await page.evaluate(() => window.scrollTo(0, 0));
               await page.waitForTimeout(250);
-              await page.screenshot({ path: 'visual-audit/desktop-top.png' });
+              await page.screenshot({ path: 'visual-audit/' + name + '-top.png' });
 
               await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight / 2));
               await page.waitForTimeout(250);
-              await page.screenshot({ path: 'visual-audit/desktop-middle.png' });
+              await page.screenshot({ path: 'visual-audit/' + name + '-middle.png' });
 
               await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
               await page.waitForTimeout(250);
-              await page.screenshot({ path: 'visual-audit/desktop-bottom.png' });
+              await page.screenshot({ path: 'visual-audit/' + name + '-bottom.png' });
             }
 
             results.push({
