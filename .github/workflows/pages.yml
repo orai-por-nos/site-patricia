@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -43,9 +43,6 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -160,12 +157,3 @@ jobs:
           name: visual-audit
           path: visual-audit
           if-no-files-found: error
-
-      - name: Publish captures for review
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f visual-audit
-          git commit -m "Update visual audit captures [skip ci]"
-          git push
