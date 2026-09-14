@@ -1,0 +1,182 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  visual-check:
+    name: Visual validation
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Wait for the published URL
+        shell: bash
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error --location --output /dev/null "https://orai-por-nos.github.io/site-patricia/"; then
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Install browser
+        shell: bash
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Capture and inspect desktop and mobile
+        shell: bash
+        run: |
+          mkdir -p visual-audit
+          node --input-type=module <<'AUDIT'
+          import { chromium } from 'playwright';
+          import { writeFile } from 'node:fs/promises';
+
+          const url = 'https://orai-por-nos.github.io/site-patricia/';
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+
+          async function audit(name, viewport) {
+            const page = await browser.newPage({ viewport });
+            const consoleErrors = [];
+            const failedRequests = [];
+
+            page.on('console', message => {
+              if (message.type() === 'error') consoleErrors.push(message.text());
+            });
+            page.on('requestfailed', request => {
+              failedRequests.push({
+                url: request.url(),
+                error: request.failure()?.errorText || 'unknown'
+              });
+            });
+
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await page.evaluate(() => document.fonts.ready);
+            await page.waitForTimeout(1500);
+            await page.addStyleTag({ content: 'html, body { scroll-behavior: auto !important; }' });
+
+            const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+            const step = Math.max(500, Math.floor(viewport.height * 0.75));
+            for (let y = 0; y <= pageHeight; y += step) {
+              await page.evaluate(position => window.scrollTo(0, position), y);
+              await page.waitForTimeout(120);
+            }
+            await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+            await page.waitForTimeout(700);
+
+            const metrics = await page.evaluate(() => ({
+              title: document.title,
+              scrollWidth: document.documentElement.scrollWidth,
+              clientWidth: document.documentElement.clientWidth,
+              scrollHeight: document.documentElement.scrollHeight,
+              headings: Array.from(document.querySelectorAll('h1, h2')).map(node => node.textContent.trim()),
+              specialtyCount: document.querySelectorAll('.servicos__grid .card').length,
+              acupunctureCardPresent: Array.from(document.querySelectorAll('.servicos__grid .card h3')).some(node => node.textContent.trim() === 'Acupuntura'),
+              heroChipTopDelta: (() => {
+                const first = document.querySelector('.hero__chip--tl')?.getBoundingClientRect();
+                const second = document.querySelector('.hero__chip--br')?.getBoundingClientRect();
+                return first && second ? Math.abs(first.top - second.top) : null;
+              })()
+            }));
+
+            await page.screenshot({ path: 'visual-audit/' + name + '.png', fullPage: true });
+
+            {
+              await page.evaluate(() => window.scrollTo(0, 0));
+              await page.waitForTimeout(250);
+              await page.screenshot({ path: 'visual-audit/' + name + '-top.png' });
+
+              await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight / 2));
+              await page.waitForTimeout(250);
+              await page.screenshot({ path: 'visual-audit/' + name + '-middle.png' });
+
+              await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+              await page.waitForTimeout(250);
+              await page.screenshot({ path: 'visual-audit/' + name + '-bottom.png' });
+            }
+
+            results.push({
+              viewport: name,
+              ...metrics,
+              horizontalOverflow: metrics.scrollWidth > metrics.clientWidth,
+              consoleErrors: [...new Set(consoleErrors)],
+              failedRequests
+            });
+            await page.close();
+          }
+
+          await audit('desktop', { width: 1440, height: 1000 });
+          await audit('mobile', { width: 390, height: 844 });
+          await browser.close();
+
+          const report = {
+            url,
+            generatedAt: new Date().toISOString(),
+            results
+          };
+          await writeFile('visual-audit/report.json', JSON.stringify(report, null, 2));
+
+          const violations = results.flatMap(result => {
+            const items = [];
+            if (result.horizontalOverflow) items.push(result.viewport + ': horizontal overflow');
+            if (result.consoleErrors.length) items.push(result.viewport + ': console errors');
+            if (!result.acupunctureCardPresent || result.specialtyCount !== 5) items.push(result.viewport + ': Acupuntura card missing');
+            if (result.viewport === 'desktop' && (result.heroChipTopDelta === null || result.heroChipTopDelta > 12)) {
+              items.push('desktop: hero chips are not aligned');
+            }
+            return items;
+          });
+          if (violations.length) {
+            console.error(violations.join('\n'));
+            process.exitCode = 1;
+          }
+          AUDIT
+
+      - name: Upload visual audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-audit
+          path: visual-audit
+          if-no-files-found: error
