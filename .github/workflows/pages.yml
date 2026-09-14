@@ -70,7 +70,7 @@ jobs:
         run: |
           mkdir -p visual-audit
           npx playwright screenshot --browser chromium --viewport-size "1440,1000" --full-page "https://orai-por-nos.github.io/site-patricia/" visual-audit/desktop.png
-          npx playwright screenshot --browser chromium --device "iPhone 13" --full-page "https://orai-por-nos.github.io/site-patricia/" visual-audit/mobile.png
+          npx playwright screenshot --browser chromium --viewport-size "390,844" --full-page "https://orai-por-nos.github.io/site-patricia/" visual-audit/mobile.png
 
       - name: Upload visual audit
         uses: actions/upload-artifact@v4
