@@ -111,7 +111,14 @@ jobs:
               scrollWidth: document.documentElement.scrollWidth,
               clientWidth: document.documentElement.clientWidth,
               scrollHeight: document.documentElement.scrollHeight,
-              headings: Array.from(document.querySelectorAll('h1, h2')).map(node => node.textContent.trim())
+              headings: Array.from(document.querySelectorAll('h1, h2')).map(node => node.textContent.trim()),
+              specialtyCount: document.querySelectorAll('.servicos__grid .card').length,
+              acupunctureCardPresent: Array.from(document.querySelectorAll('.servicos__grid .card h3')).some(node => node.textContent.trim() === 'Acupuntura'),
+              heroChipTopDelta: (() => {
+                const first = document.querySelector('.hero__chip--tl')?.getBoundingClientRect();
+                const second = document.querySelector('.hero__chip--br')?.getBoundingClientRect();
+                return first && second ? Math.abs(first.top - second.top) : null;
+              })()
             }));
 
             await page.screenshot({ path: 'visual-audit/' + name + '.png', fullPage: true });
@@ -144,11 +151,27 @@ jobs:
           await audit('mobile', { width: 390, height: 844 });
           await browser.close();
 
-          await writeFile('visual-audit/report.json', JSON.stringify({
+          const report = {
             url,
             generatedAt: new Date().toISOString(),
             results
-          }, null, 2));
+          };
+          await writeFile('visual-audit/report.json', JSON.stringify(report, null, 2));
+
+          const violations = results.flatMap(result => {
+            const items = [];
+            if (result.horizontalOverflow) items.push(result.viewport + ': horizontal overflow');
+            if (result.consoleErrors.length) items.push(result.viewport + ': console errors');
+            if (!result.acupunctureCardPresent || result.specialtyCount !== 5) items.push(result.viewport + ': Acupuntura card missing');
+            if (result.viewport === 'desktop' && (result.heroChipTopDelta === null || result.heroChipTopDelta > 12)) {
+              items.push('desktop: hero chips are not aligned');
+            }
+            return items;
+          });
+          if (violations.length) {
+            console.error(violations.join('\n'));
+            process.exitCode = 1;
+          }
           AUDIT
 
       - name: Upload visual audit
