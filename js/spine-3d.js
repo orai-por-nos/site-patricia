@@ -1,8 +1,3 @@
-import * as THREE from 'three';
-import { GLTFLoader } from './vendor/three/GLTFLoader.js';
-import { createAnatomyViewer } from './anatomy/anatomy-viewer.js';
-import { spineSet } from './anatomy/sets/spine.js';
-
 const elements = {
   stage: document.getElementById('spineStage'),
   canvas: document.getElementById('spineCanvas'),
@@ -13,7 +8,31 @@ const elements = {
 };
 
 if (elements.stage && elements.canvas) {
-  fetch('assets/models/anatomy-catalog.json')
+  const diagnostics = {
+    state: 'waiting',
+    requestedAt: null,
+    readyAt: null,
+    usableAfterMs: null
+  };
+  window.__anatomyLazyDiagnostics = diagnostics;
+
+  async function initializeViewer() {
+    if (diagnostics.state !== 'waiting') return;
+    diagnostics.state = 'loading';
+    diagnostics.requestedAt = performance.now();
+
+    try {
+      const [THREE, loaderModule, viewerModule, setModule] = await Promise.all([
+        import('three'),
+        import('./vendor/three/GLTFLoader.js'),
+        import('./anatomy/anatomy-viewer.js'),
+        import('./anatomy/sets/spine.js')
+      ]);
+      const { GLTFLoader } = loaderModule;
+      const { createAnatomyViewer } = viewerModule;
+      const { spineSet } = setModule;
+
+      return fetch('assets/models/anatomy-catalog.json')
     .then((response) => {
       if (!response.ok) throw new Error(`Catálogo anatômico indisponível (${response.status})`);
       return response.json();
@@ -29,11 +48,36 @@ if (elements.stage && elements.canvas) {
       };
       const viewer = createAnatomyViewer({ THREE, GLTFLoader, elements, initialSet });
       window.__anatomyViewer = viewer;
+      const readyProbe = window.setInterval(() => {
+        if (!viewer.getDiagnostics().ready) return;
+        window.clearInterval(readyProbe);
+        diagnostics.state = 'ready';
+        diagnostics.readyAt = performance.now();
+        diagnostics.usableAfterMs = diagnostics.readyAt - diagnostics.requestedAt;
+      }, 50);
     })
-    .catch((error) => {
+      .catch(handleInitializationError);
+    } catch (error) {
+      handleInitializationError(error);
+    }
+  }
+
+  function handleInitializationError(error) {
       console.error('Falha ao iniciar o visualizador anatômico:', error);
       if (elements.loading) elements.loading.hidden = true;
       if (elements.fallback) elements.fallback.hidden = false;
       elements.stage.classList.add('has-error');
-    });
+      diagnostics.state = 'error';
+    }
+
+  if ('IntersectionObserver' in window) {
+    const proximityObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      proximityObserver.disconnect();
+      initializeViewer();
+    }, { rootMargin: '2400px 0px', threshold: 0 });
+    proximityObserver.observe(elements.stage);
+  } else {
+    window.addEventListener('load', initializeViewer, { once: true });
+  }
 }

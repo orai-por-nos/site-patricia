@@ -3,22 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patrícia Gomes · Fisioterapia, Pilates, Acupuntura e RPG</title>
-  <meta name="description" content="Patrícia Gomes é fisioterapeuta e atende com Fisioterapia, Pilates, Recovery, RPG – Método Souchard e Acupuntura. Atendimento individualizado no Rio de Janeiro." />
-  <meta property="og:title" content="Patrícia Gomes · Fisioterapia, Pilates, Acupuntura e RPG" />
-  <meta property="og:description" content="Cuidar do corpo para que ele continue fazendo o que ama. Fisioterapia, Pilates, Recovery, RPG – Método Souchard e Acupuntura com atendimento individualizado." />
+  <title>Patrícia Gomes · Fisioterapia, Pilates e RPG</title>
+  <meta name="description" content="Patrícia Gomes é fisioterapeuta e atende com Fisioterapia, Pilates, Recovery e RPG – Método Souchard. Atendimento individualizado no Rio de Janeiro." />
+  <meta property="og:title" content="Patrícia Gomes · Fisioterapia, Pilates e RPG" />
+  <meta property="og:description" content="Cuidar do corpo para que ele continue fazendo o que ama. Fisioterapia, Pilates, Recovery e RPG – Método Souchard com atendimento individualizado." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
-  <meta property="og:image" content="https://raw.githubusercontent.com/orai-por-nos/site-patricia/main/assets/img/avatar-hd.jpg" />
-  <meta property="og:image:alt" content="Retrato de Patrícia Gomes, fisioterapeuta" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#123c34" />
+  <meta property="og:image" content="assets/img/avatar-hd.jpg" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/human-body.css" />
   <script type="importmap">
     {"imports":{"three":"./js/vendor/three/three.module.min.js"}}
   </script>
@@ -56,7 +52,7 @@
     <!-- ===== HERO / PRIMEIRA DOBRA ===== -->
     <section class="hero" id="home">
       <div class="hero__video" aria-hidden="true">
-        <video class="hero__video-layer is-active" src="assets/videos/01.mp4" muted playsinline preload="metadata" tabindex="-1"></video>
+        <video class="hero__video-layer is-active" src="assets/videos/01.mp4" autoplay muted playsinline preload="auto" tabindex="-1"></video>
         <video class="hero__video-layer" muted playsinline preload="none" tabindex="-1"></video>
         <span class="hero__video-overlay"></span>
       </div>
@@ -66,7 +62,7 @@
 
       <div class="container hero__grid">
         <div class="hero__copy">
-          <p class="hero__eyebrow" data-reveal style="--rd:0.06s"><svg class="eyebrow-star" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg>Fisioterapia · Pilates · Recovery · RPG · Acupuntura</p>
+          <p class="hero__eyebrow" data-reveal style="--rd:0.06s"><svg class="eyebrow-star" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg>Fisioterapia · Pilates · Recovery · RPG</p>
           <h1 class="hero__title" data-reveal style="--rd:0.18s">
             Cuidar do corpo para que ele continue
             <span class="hero__accent">fazendo o que ama.
@@ -98,7 +94,7 @@
             </figcaption>
           </figure>
           <div class="hero__chip hero__chip--tl" aria-hidden="true">
-            <span class="chip-ico"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>
+            <span class="chip-ico"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M12 2.5l1.8 6.1 6.2 1.9-6.2 1.8-1.8 6.2-1.8-6.2L4 10.5l6.2-1.9L12 2.5Z" fill="currentColor"/></svg></span>
             <div><strong>Atendimento</strong><small>individualizado</small></div>
           </div>
           <div class="hero__chip hero__chip--br" aria-hidden="true">
@@ -118,7 +114,6 @@
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Pilates para bailarinos</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Recovery</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>RPG</span>
-          <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Acupuntura</span>
         </div>
         <div class="marquee__group">
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Fisioterapia</span>
@@ -126,7 +121,6 @@
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Pilates para bailarinos</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Recovery</span>
           <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>RPG</span>
-          <span class="marquee__item"><span class="star"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M12 1.5 14.4 9.6 22.5 12l-8.1 2.4L12 22.5 9.6 14.4 1.5 12l8.1-2.4z" fill="currentColor"/></svg></span>Acupuntura</span>
         </div>
       </div>
     </div>
@@ -166,7 +160,6 @@
         <li>Pilates para bailarinos</li>
         <li>Recovery</li>
         <li>RPG</li>
-        <li>Acupuntura</li>
       </ul>
     </section>
 
@@ -214,14 +207,6 @@
               <a class="card__link" href="https://wa.me/5521982338381" target="_blank" rel="noopener">Agendar <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </article>
-          <article class="card" data-reveal data-tilt style="--rd:0.5s">
-            <div class="card__index" aria-hidden="true">05</div>
-            <div class="card__body">
-              <h3>Acupuntura</h3>
-              <p>Técnica terapêutica que estimula pontos específicos do corpo para auxiliar no alívio da dor, no relaxamento e no equilíbrio funcional, conforme a avaliação individual.</p>
-              <a class="card__link" href="https://wa.me/5521982338381" target="_blank" rel="noopener">Agendar <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            </div>
-          </article>
         </div>
       </div>
     </section>
@@ -243,7 +228,7 @@
           <article class="dif" data-reveal>
             <span class="dif__num" aria-hidden="true">02</span>
             <h3>Olhar amplo sobre o movimento</h3>
-            <p>Fisioterapia, Pilates, Recovery, RPG e Acupuntura integrados ao cuidado de acordo com as necessidades de cada pessoa.</p>
+            <p>Fisioterapia, Pilates, Recovery e RPG integrados ao cuidado de acordo com as necessidades de cada pessoa.</p>
           </article>
           <article class="dif" data-reveal>
             <span class="dif__num" aria-hidden="true">03</span>
@@ -261,23 +246,44 @@
 
     <!-- ===== ANATOMIA EM MOVIMENTO ===== -->
     <section class="anatomia section" id="anatomia" aria-labelledby="anatomia-title">
-      <div class="container">
+      <span class="section__ghost" aria-hidden="true">25</span>
+      <div class="container anatomia__layout">
         <div class="anatomia__copy" data-reveal>
           <p class="section__eyebrow">Anatomia em movimento</p>
           <h2 class="section__title" id="anatomia-title">Entender o corpo também faz parte do <em>cuidado</em>.</h2>
-          <p class="section__lead">Explore o corpo humano, descubra músculos e ossos e observe como cada estrutura faz parte do todo.</p>
-        </div>
-        <div id="humanBodyExplorer" class="hbe" aria-label="Explorador do corpo humano">
-          <div class="hbe-welcome">
-            <span class="hbe-kicker">UM NOVO OLHAR SOBRE O MOVIMENTO</span>
-            <h3>Do corpo inteiro<br>ao menor detalhe.</h3>
-            <p>Gire o corpo, separe as estruturas e escolha uma parte para conhecê-la de perto.</p>
-            <button type="button" class="btn btn--primary" id="humanBodyStart">Explorar corpo <span aria-hidden="true">↗</span></button>
-            <p class="hbe-download">A experiência 3D carrega ao abrir. Download inicial de aproximadamente 33 MB.</p>
-            <p id="humanBodyStatus" role="status" aria-live="polite"></p>
+          <p class="section__lead">Explore a coluna vertebral e conheça as regiões que trabalham juntas em cada movimento.</p>
+          <p class="anatomia__text">Arraste para girar, toque em uma região para destacá-la ou afaste as estruturas para observar cada parte com mais clareza.</p>
+
+          <div class="anatomia__regions" role="group" aria-label="Destacar região da coluna">
+            <button type="button" class="anatomia__region is-active" data-spine-region="all" aria-pressed="true">Coluna completa</button>
+            <button type="button" class="anatomia__region" data-spine-region="cervical" aria-pressed="false">Cervical <span>7</span></button>
+            <button type="button" class="anatomia__region" data-spine-region="thoracic" aria-pressed="false">Torácica <span>12</span></button>
+            <button type="button" class="anatomia__region" data-spine-region="lumbar" aria-pressed="false">Lombar <span>5</span></button>
+            <button type="button" class="anatomia__region" data-spine-region="sacrum_coccyx" aria-pressed="false">Sacro e cóccix <span>1</span></button>
           </div>
+
+          <div class="anatomia__actions">
+            <button type="button" class="anatomia__action" id="spineExplode" aria-pressed="false">Separar regiões</button>
+            <button type="button" class="anatomia__action anatomia__action--quiet" id="spineReset">Restaurar posição</button>
+          </div>
+          <p class="anatomia__source">Modelo anatômico 3D: NIH 3D.</p>
         </div>
-        <p class="hbe-credit">Modelo de referência masculino adulto · Uso educativo.<br>Human Atlas (MIT) · BodyParts3D, © The Database Center for Life Science, CC BY 4.0. <a href="assets/models/human-atlas/ATTRIBUTION.md" target="_blank" rel="noopener">Fontes e adaptações</a></p>
+
+        <div class="anatomia__viewer" data-reveal="scale" style="--rd:0.12s">
+          <div class="anatomia__stage" id="spineStage">
+            <canvas id="spineCanvas" tabindex="0" aria-label="Modelo tridimensional interativo da coluna vertebral. Use as setas para girar e mais ou menos para aproximar ou afastar."></canvas>
+            <div class="anatomia__loading" id="spineLoading" role="status" aria-live="polite">
+              <span class="anatomia__loader" aria-hidden="true"></span>
+              <span id="spineLoadingText">Preparando anatomia 3D…</span>
+            </div>
+            <p class="anatomia__fallback" id="spineFallback" hidden>Não foi possível carregar a visualização 3D. O restante do site continua disponível normalmente.</p>
+            <div class="anatomia__hint" aria-hidden="true">
+              <span>Arraste para girar</span>
+              <span>Toque para explorar</span>
+            </div>
+          </div>
+          <p class="anatomia__selection" id="spineSelection" aria-live="polite">Coluna completa · 25 estruturas</p>
+        </div>
       </div>
     </section>
 
@@ -332,24 +338,24 @@
           <h2 class="section__title">O que compartilho</h2>
           <p class="section__sub">Educação em fisioterapia, dicas de recuperação e um pouco dos bastidores dos atendimentos.</p>
         </div>
-        <div class="conteudo__grid">
-          <article class="tema tema--featured" data-reveal>
+        <div class="conteudo__grid" data-content-feed>
+          <article class="tema tema--featured" data-content-card data-reveal>
             <span class="tema__tag">Em destaque</span>
-            <h3>Tendinopatia, tendinite, tendinose e tenossinovite</h3>
+            <h3><a class="tema__link" href="https://www.instagram.com/fisio.patriciagomes/p/DbdvtiQjtcb/" target="_blank" rel="noopener">Tendinopatia, tendinite, tendinose e tenossinovite</a></h3>
             <p>Termos que costumam aparecer como sinônimos, mas descrevem condições diferentes. Explico tudo de forma simples e baseada em evidências, para que você entenda melhor o que está acontecendo com o seu corpo.</p>
           </article>
           <div class="tema__side">
-            <article class="tema" data-reveal style="--rd:0.08s">
-              <h3>Gelo x calor</h3>
+            <article class="tema" data-content-card data-reveal style="--rd:0.08s">
+              <h3><a class="tema__link" href="https://www.instagram.com/fisio.patriciagomes/p/DblEfTxjiRH/" target="_blank" rel="noopener">Gelo x calor</a></h3>
               <p>Quando usar cada um e em quais situações, de forma prática, para cuidar do sintoma no momento certo.</p>
             </article>
-            <article class="tema" data-reveal style="--rd:0.16s">
-              <h3>Tempo de cicatrização dos tecidos</h3>
+            <article class="tema" data-content-card data-reveal style="--rd:0.16s">
+              <h3><a class="tema__link" href="https://www.instagram.com/fisio.patriciagomes/p/Dbaz9HkjsTf/" target="_blank" rel="noopener">Tempo de cicatrização dos tecidos</a></h3>
               <p>Cada tecido tem um tempo próprio de regeneração. Comparar a sua evolução com a de outra pessoa costuma atrasar mais do que ajudar.</p>
             </article>
-            <article class="tema" data-reveal style="--rd:0.24s">
-              <h3>Reabilitação e prevenção de lesões</h3>
-              <p>Restaurar o movimento, melhorar a funcionalidade e devolver segurança para as atividades do dia a dia.</p>
+            <article class="tema" data-content-card data-reveal style="--rd:0.24s">
+              <h3><a class="tema__link" href="https://www.instagram.com/fisio.patriciagomes/p/DbV4GbdDrZI/" target="_blank" rel="noopener">Alimentação e lesões</a></h3>
+              <p>Uma conversa sobre a relação entre alimentação, recuperação dos tecidos e cuidado durante a reabilitação.</p>
             </article>
           </div>
         </div>
@@ -364,41 +370,29 @@
           <h2 class="section__title">Um pouco do dia a dia</h2>
           <p class="section__sub">Conteúdo educativo e bastidores do consultório. Siga <strong>@fisio.patriciagomes</strong> para acompanhar de perto.</p>
         </div>
-        <div class="insta__mosaic">
-          <a class="insta__item insta__item--lg" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal>
-            <img src="assets/img/post3.jpg" alt="Publicação do perfil @fisio.patriciagomes" loading="lazy" />
+        <div class="insta__mosaic" data-instagram-feed>
+          <a class="insta__item insta__item--lg" href="https://www.instagram.com/fisio.patriciagomes/p/DbV4GbdDrZI/" target="_blank" rel="noopener" data-reveal>
+            <img src="assets/img/post8-alimentacao-lesoes.webp" alt="Publicação sobre alimentação e lesões no perfil @fisio.patriciagomes" loading="lazy" />
             <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/></svg></span>
           </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.06s">
-            <img src="assets/img/post2.webp" alt="Publicação do perfil @fisio.patriciagomes" loading="lazy" />
+          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/p/DcdjC2FDiTE/" target="_blank" rel="noopener" data-reveal style="--rd:0.06s">
+            <img src="assets/img/post2.webp" alt="Publicação sobre dor muscular, nervosa ou articular no perfil @fisio.patriciagomes" loading="lazy" />
             <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.12s">
-            <img src="assets/img/post4.webp" alt="Publicação do perfil @fisio.patriciagomes" loading="lazy" />
+          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/p/DbwAvoSxSeg/" target="_blank" rel="noopener" data-reveal style="--rd:0.12s">
+            <img src="assets/img/post4.webp" alt="Publicação sobre movimento e fisioterapia no perfil @fisio.patriciagomes" loading="lazy" />
             <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.18s">
-            <img src="assets/img/post5.webp" alt="Publicação do perfil @fisio.patriciagomes" loading="lazy" />
+          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/p/DblEfTxjiRH/" target="_blank" rel="noopener" data-reveal style="--rd:0.18s">
+            <img src="assets/img/post5.webp" alt="Publicação sobre gelo ou calor no perfil @fisio.patriciagomes" loading="lazy" />
             <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.2s">
-            <img src="assets/img/post6.webp" alt="Publicação do perfil @fisio.patriciagomes" loading="lazy" />
+          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/p/DbdvtiQjtcb/" target="_blank" rel="noopener" data-reveal style="--rd:0.2s">
+            <img src="assets/img/post6.webp" alt="Publicação sobre condições dos tendões no perfil @fisio.patriciagomes" loading="lazy" />
             <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.24s">
-            <img src="assets/img/post7.webp" alt="Publicação do perfil @fisio.patriciagomes" loading="lazy" />
-            <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.28s">
-            <img src="assets/img/post8.svg" alt="Publicação sobre pausas e movimento no dia a dia" loading="lazy" />
-            <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.32s">
-            <img src="assets/img/post9.svg" alt="Publicação sobre alongamento e escuta do corpo" loading="lazy" />
-            <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </a>
-          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/" target="_blank" rel="noopener" data-reveal style="--rd:0.36s">
-            <img src="assets/img/post10.svg" alt="Publicação sobre escuta e sinais do corpo" loading="lazy" />
+          <a class="insta__item" href="https://www.instagram.com/fisio.patriciagomes/p/Dbaz9HkjsTf/" target="_blank" rel="noopener" data-reveal style="--rd:0.24s">
+            <img src="assets/img/post7.webp" alt="Publicação sobre tempo de cicatrização no perfil @fisio.patriciagomes" loading="lazy" />
             <span class="insta__overlay"><span>Ver no Instagram</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </a>
         </div>
@@ -440,7 +434,7 @@
               </div>
             </li>
           </ul>
-          <p class="contato__note">Os agendamentos e esclarecimentos são realizados diretamente pelo WhatsApp, de forma simples e rápida.</p>
+          <p class="contato__note">Agende pelo WhatsApp. Não possuo e-mail ou site próprio divulgados publicamente — todo o contato é feito por aqui.</p>
         </div>
         <div class="contato__form-wrap" data-reveal="right" style="--rd:0.12s">
           <form class="contato__form" id="contactForm" novalidate>
@@ -455,6 +449,14 @@
               </p>
             </div>
             <div class="field">
+              <label for="whats">Seu WhatsApp <span>*</span></label>
+              <input type="tel" id="whats" name="whats" placeholder="(DDD) 99999-9999" required aria-describedby="erro-whats" />
+              <p class="field__error" id="erro-whats" hidden>
+                <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 6.4v4.2M10 13.4v.2"/></svg>
+                <span>Preciso do seu WhatsApp para responder.</span>
+              </p>
+            </div>
+            <div class="field">
               <label for="assunto">Assunto</label>
               <select id="assunto" name="assunto">
                 <option value="Agendar avaliação">Agendar avaliação</option>
@@ -462,7 +464,6 @@
                 <option value="Pilates">Pilates</option>
                 <option value="Recovery">Recovery</option>
                 <option value="RPG">RPG</option>
-                <option value="Acupuntura">Acupuntura</option>
                 <option value="Outro">Outro</option>
               </select>
             </div>
@@ -505,6 +506,6 @@
   </footer>
 
   <script src="js/main.js"></script>
-  <script type="module" src="js/human-body-loader.js"></script>
+  <script type="module" src="js/spine-3d.js?v=20260902-1"></script>
 </body>
 </html>

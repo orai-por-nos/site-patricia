@@ -51,13 +51,13 @@
     var activeSlot = 0;
     var currentIndex = 0;
     var transitioning = false;
-    var nextPrepared = false;
-    var waitingForNext = false;
     var fadeDuration = 1250;
-    var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    var lowDataVideo = Boolean(
-      connection && (connection.saveData || /(^|-)2g$/.test(connection.effectiveType || ''))
-    );
+    var heroInViewport = true;
+    var prepareTimer = 0;
+
+    function canAnimateVideo() {
+      return !prefersReduced && heroInViewport && !document.hidden;
+    }
 
     function configureVideo(video) {
       video.muted = true;
@@ -77,6 +77,7 @@
 
     function loadIntoSlot(slot, sourceIndex) {
       var video = heroVideoLayers[slot];
+      if (video.dataset.sourceIndex === String(sourceIndex) && video.getAttribute('src')) return;
       configureVideo(video);
       video.dataset.sourceIndex = String(sourceIndex);
       video.preload = 'auto';
@@ -87,9 +88,33 @@
     }
 
     function prepareNext() {
-      if (nextPrepared || lowDataVideo || prefersReduced) return;
+      if (!canAnimateVideo()) return;
       loadIntoSlot(1 - activeSlot, (currentIndex + 1) % heroVideoSources.length);
-      nextPrepared = true;
+    }
+
+    function scheduleNext() {
+      window.clearTimeout(prepareTimer);
+      if (!canAnimateVideo()) return;
+      var active = heroVideoLayers[activeSlot];
+      if (!Number.isFinite(active.duration) || active.duration <= 0) return;
+      // Prepare only the next clip near the existing crossfade. Short clips
+      // retain four seconds of preparation; longer clips get up to eight.
+      var preparationLead = Math.min(8, Math.max(4, active.duration * 0.35));
+      var delay = Math.max(0, (active.duration - active.currentTime - preparationLead) * 1000);
+      prepareTimer = window.setTimeout(prepareNext, delay);
+    }
+
+    function pauseVideoLayers() {
+      heroVideoLayers.forEach(function (video) { video.pause(); });
+    }
+
+    function resumeActiveVideo() {
+      if (!canAnimateVideo() || heroVideoShell.classList.contains('has-playback-fallback')) return;
+      safePlay(heroVideoLayers[activeSlot]).then(function () {
+        scheduleNext();
+      }).catch(function () {
+        heroVideoShell.classList.add('has-playback-fallback');
+      });
     }
 
     function finishTransition(previousSlot, nextSlot, nextIndex) {
@@ -103,13 +128,12 @@
         activeSlot = nextSlot;
         currentIndex = nextIndex;
         transitioning = false;
-        nextPrepared = false;
-        waitingForNext = false;
+        scheduleNext();
       }, fadeDuration);
     }
 
     function transitionToNext() {
-      if (transitioning || prefersReduced || lowDataVideo) return;
+      if (transitioning || !canAnimateVideo()) return;
       var previousSlot = activeSlot;
       var nextSlot = 1 - activeSlot;
       var previous = heroVideoLayers[previousSlot];
@@ -121,13 +145,7 @@
         return;
       }
       if (next.readyState < 2) {
-        if (!waitingForNext) {
-          waitingForNext = true;
-          next.addEventListener('canplay', function () {
-            waitingForNext = false;
-            transitionToNext();
-          }, { once: true });
-        }
+        next.addEventListener('canplay', transitionToNext, { once: true });
         return;
       }
 
@@ -147,9 +165,10 @@
       configureVideo(video);
       video.addEventListener('timeupdate', function () {
         if (slot !== activeSlot || transitioning || !Number.isFinite(video.duration)) return;
-        var remaining = video.duration - video.currentTime;
-        if (remaining <= Math.max(4.5, video.duration * 0.45)) prepareNext();
-        if (remaining <= 1.4) transitionToNext();
+        if (video.duration - video.currentTime <= 1.4) transitionToNext();
+      });
+      video.addEventListener('loadedmetadata', function () {
+        if (slot === activeSlot && !transitioning) scheduleNext();
       });
       video.addEventListener('ended', transitionToNext);
       video.addEventListener('error', function () {
@@ -159,49 +178,46 @@
 
     var first = heroVideoLayers[0];
     first.dataset.sourceIndex = '0';
-    if (prefersReduced || lowDataVideo) {
+    if (prefersReduced) {
       first.autoplay = false;
       first.removeAttribute('autoplay');
-      first.preload = 'metadata';
       first.pause();
     }
     function revealFirstFrame() {
       heroVideoShell.classList.add('is-ready');
-      if (prefersReduced || lowDataVideo) {
+      if (prefersReduced) {
         first.pause();
         return;
       }
-      safePlay(first).catch(function () {
+      safePlay(first).then(function () {
+        scheduleNext();
+      }).catch(function () {
         heroVideoShell.classList.add('has-playback-fallback');
       });
     }
     first.addEventListener('loadeddata', revealFirstFrame, { once: true });
     if (first.readyState >= 2) revealFirstFrame();
 
-    if ('IntersectionObserver' in window) {
-      var playbackObserver = new IntersectionObserver(function (entries) {
+    if ('IntersectionObserver' in window && !prefersReduced) {
+      var heroVideoObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          var activeVideo = heroVideoLayers[activeSlot];
-          if (!activeVideo || prefersReduced || lowDataVideo) return;
-          if (entry.isIntersecting) {
-            safePlay(activeVideo).catch(function () {
-              heroVideoShell.classList.add('has-playback-fallback');
-            });
-          } else {
-            heroVideoLayers.forEach(function (video) { video.pause(); });
+          heroInViewport = entry.isIntersecting && entry.intersectionRatio > 0.05;
+          if (heroInViewport) resumeActiveVideo();
+          else {
+            window.clearTimeout(prepareTimer);
+            pauseVideoLayers();
           }
         });
-      }, { threshold: 0.08 });
-      playbackObserver.observe(hero);
+      }, { threshold: [0, 0.05, 0.2] });
+      heroVideoObserver.observe(hero);
     }
 
     document.addEventListener('visibilitychange', function () {
-      var activeVideo = heroVideoLayers[activeSlot];
-      if (!activeVideo || prefersReduced || lowDataVideo) return;
       if (document.hidden) {
-        heroVideoLayers.forEach(function (video) { video.pause(); });
-      } else if (hero.getBoundingClientRect().bottom > 0) {
-        safePlay(activeVideo).catch(function () {});
+        window.clearTimeout(prepareTimer);
+        pauseVideoLayers();
+      } else {
+        resumeActiveVideo();
       }
     });
   }
@@ -330,61 +346,129 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ---- Menu mobile ---- */
+  /* ---- Menu mobile: closed content is inert; open content owns the focus ---- */
   var toggle = document.getElementById('navToggle');
   var links = navLinks;
+  var mobileMenuQuery = window.matchMedia('(max-width: 860px)');
+  var menuBackground = [document.querySelector('main'), document.querySelector('footer'),
+    backTop, document.querySelector('.skip-link'), nav && nav.querySelector('.nav__brand')]
+    .filter(Boolean);
+  var savedMenuBackground = [];
+  var savedHtmlOverflow = '';
+  var savedMenuLayout = [];
 
-  var mobileMenuQuery = window.matchMedia('(max-width: 760px)');
-
-  function syncMenuAccessibility() {
-    if (!links) return;
-    var closedOnMobile = mobileMenuQuery.matches && !links.classList.contains('open');
-    if (closedOnMobile) links.setAttribute('inert', '');
-    else links.removeAttribute('inert');
+  function saveMenuStyle(el, property, value) {
+    savedMenuLayout.push({ el: el, property: property, value: el.style[property] });
+    el.style[property] = value;
   }
 
-  function closeMenu(restoreFocus) {
-    if (links && links.classList) {
-      links.classList.remove('open');
-      document.body.classList.remove('menu-open');
-      if (toggle) {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Abrir menu');
-        if (restoreFocus) toggle.focus();
-      }
-      syncMenuAccessibility();
+  function menuIsOpen() {
+    return mobileMenuQuery.matches && links && links.classList.contains('open');
+  }
+
+  function menuFocusables() {
+    return [].slice.call(links.querySelectorAll('a[href]')).filter(function (el) {
+      return el.getClientRects().length && window.getComputedStyle(el).display !== 'none';
+    }).concat(toggle);
+  }
+
+  function syncClosedMenu() {
+    if (!links) return;
+    var hidden = mobileMenuQuery.matches && !links.classList.contains('open');
+    links.inert = hidden;
+    if (hidden) links.setAttribute('aria-hidden', 'true');
+    else links.removeAttribute('aria-hidden');
+  }
+
+  function openMenu() {
+    if (!mobileMenuQuery.matches || menuIsOpen()) return;
+    links.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', 'Fechar menu');
+    syncClosedMenu();
+    savedMenuBackground = menuBackground.map(function (el) {
+      var state = { el: el, inert: el.hasAttribute('inert') };
+      el.inert = true;
+      return state;
+    });
+    savedHtmlOverflow = document.documentElement.style.overflowY;
+    // Compensate the removed scrollbar without changing viewport-based typography.
+    var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      saveMenuStyle(document.body, 'paddingRight',
+        (parseFloat(window.getComputedStyle(document.body).paddingRight) + scrollbarWidth) + 'px');
+      saveMenuStyle(nav, 'right', scrollbarWidth + 'px');
+      saveMenuStyle(links, 'right', scrollbarWidth + 'px');
     }
+    document.documentElement.style.overflowY = 'hidden';
+    menuFocusables()[0].focus({ preventScroll: true });
+  }
+
+  function closeMenu(returnFocus) {
+    if (!links || !toggle) return;
+    var wasOpen = links.classList.contains('open');
+    links.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Abrir menu');
+    if (wasOpen) {
+      savedMenuBackground.forEach(function (state) { state.el.inert = state.inert; });
+      savedMenuBackground = [];
+      document.documentElement.style.overflowY = savedHtmlOverflow;
+      savedMenuLayout.forEach(function (state) { state.el.style[state.property] = state.value; });
+      savedMenuLayout = [];
+      if (returnFocus !== false && mobileMenuQuery.matches) toggle.focus({ preventScroll: true });
+    }
+    syncClosedMenu();
   }
 
   if (toggle && links) {
-    syncMenuAccessibility();
+    syncClosedMenu();
     toggle.addEventListener('click', function () {
-      var open = !links.classList.contains('open');
-      links.classList.toggle('open', open);
-      document.body.classList.toggle('menu-open', open);
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
-      syncMenuAccessibility();
-      if (open) {
-        var firstLink = links.querySelector('a');
-        if (firstLink) firstLink.focus();
-      }
+      if (menuIsOpen()) closeMenu();
+      else openMenu();
     });
     links.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () { closeMenu(false); });
+      a.addEventListener('click', function () { closeMenu(); });
     });
     document.addEventListener('click', function (e) {
-      if (links.classList.contains('open') &&
-          !links.contains(e.target) && !toggle.contains(e.target)) {
-        closeMenu(false);
-      }
+      if (menuIsOpen() && !links.contains(e.target) && !toggle.contains(e.target)) closeMenu();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && links.classList.contains('open')) closeMenu(true);
+      if (!menuIsOpen()) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenu();
+      } else if (e.key === 'Tab') {
+        var items = menuFocusables();
+        var first = items[0];
+        var last = items[items.length - 1];
+        var active = document.activeElement;
+        if (e.shiftKey && (active === first || (!links.contains(active) && active !== toggle))) {
+          e.preventDefault();
+          last.focus({ preventScroll: true });
+        } else if (!e.shiftKey && (active === last || (!links.contains(active) && active !== toggle))) {
+          e.preventDefault();
+          first.focus({ preventScroll: true });
+        }
+      }
     });
-    if (mobileMenuQuery.addEventListener) {
-      mobileMenuQuery.addEventListener('change', function () { closeMenu(false); });
-    }
+    document.addEventListener('focusin', function (e) {
+      if (menuIsOpen() && !links.contains(e.target) && e.target !== toggle) {
+        menuFocusables()[0].focus({ preventScroll: true });
+      }
+    });
+    mobileMenuQuery.addEventListener('change', function () {
+      var active = document.activeElement;
+      var wasOpen = links.classList.contains('open');
+      if (!mobileMenuQuery.matches) closeMenu(false);
+      syncClosedMenu();
+      if (mobileMenuQuery.matches && links.contains(active) && !menuIsOpen()) {
+        toggle.focus({ preventScroll: true });
+      } else if (!mobileMenuQuery.matches && (wasOpen || active === toggle)) {
+        menuFocusables()[0].focus({ preventScroll: true });
+      }
+    });
   }
 
   /* ---- Voltar ao topo ---- */
@@ -449,10 +533,12 @@
   if (form) {
     var inputs = {
       nome: document.getElementById('nome'),
+      whats: document.getElementById('whats'),
       mensagem: document.getElementById('mensagem')
     };
     var errEls = {
       nome: document.getElementById('erro-nome'),
+      whats: document.getElementById('erro-whats'),
       mensagem: document.getElementById('erro-mensagem')
     };
 
@@ -470,7 +556,12 @@
       else input.removeAttribute('aria-invalid');
     }
 
-    ['nome', 'mensagem'].forEach(function (name) {
+    function setWhatsMessage(txt) {
+      var span = errEls.whats && errEls.whats.querySelector('span');
+      if (span) span.textContent = txt;
+    }
+
+    ['nome', 'whats', 'mensagem'].forEach(function (name) {
       var input = inputs[name];
       if (!input) return;
       var clear = function () { setFieldError(name, false); };
@@ -481,6 +572,7 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var nome = ((inputs.nome && inputs.nome.value) || '').trim();
+      var whats = ((inputs.whats && inputs.whats.value) || '').trim();
       var assuntoEl = document.getElementById('assunto');
       var assunto = (assuntoEl && assuntoEl.value) || '';
       var mensagem = ((inputs.mensagem && inputs.mensagem.value) || '').trim();
@@ -489,6 +581,17 @@
 
       if (!nome) invalid.push('nome');
       else setFieldError('nome', false);
+
+      var digits = whats.replace(/\D/g, '');
+      if (!whats) {
+        setWhatsMessage('Preciso do seu WhatsApp para responder.');
+        invalid.push('whats');
+      } else if (digits.length < 10 || digits.length > 13) {
+        setWhatsMessage('Digite um WhatsApp válido, com DDD.');
+        invalid.push('whats');
+      } else {
+        setFieldError('whats', false);
+      }
 
       if (!mensagem) invalid.push('mensagem');
       else setFieldError('mensagem', false);
@@ -502,6 +605,7 @@
 
       var texto =
         'Olá, Patrícia! Me chamo ' + nome + '.\n' +
+        'WhatsApp: ' + whats + '\n' +
         'Assunto: ' + assunto + '\n' +
         'Mensagem: ' + mensagem;
 
@@ -533,20 +637,12 @@
     });
   }
 
-  /* ---- Instagram dinâmico: o mosaico muda de hora em hora ---- */
-  var INSTA_POOL = [
-    { src: 'assets/img/post3.jpg', pos: '50% 32%' },
-    { src: 'assets/img/post2.webp', pos: '50% 44%' },
-    { src: 'assets/img/post4.webp', pos: '50% 38%' },
-    { src: 'assets/img/post5.webp', pos: '50% 34%' },
-    { src: 'assets/img/post6.webp', pos: '52% 40%' },
-    { src: 'assets/img/post7.webp', pos: '48% 38%' },
-    { src: 'assets/img/post8.svg', pos: '50% 50%' },
-    { src: 'assets/img/post9.svg', pos: '50% 50%' },
-    { src: 'assets/img/post10.svg', pos: '50% 50%' }
-  ];
-  var instaItems = document.querySelectorAll('.insta__mosaic .insta__item');
-  var lastInstaHour = hourSeed();
+  /* ---- Conteúdo e Instagram: catálogo local com rotação horária ---- */
+  var FEED_CATALOG_URL = 'assets/data/instagram-posts.json';
+  var instaItems = document.querySelectorAll('[data-instagram-feed] .insta__item');
+  var contentCards = document.querySelectorAll('[data-content-feed] [data-content-card]');
+  var feedCatalog = [];
+  var lastFeedHour = hourSeed();
 
   function hourSeed() {
     return Math.floor(Date.now() / 3600000);
@@ -577,118 +673,145 @@
     return arr;
   }
 
-  /* ---- Conteúdo dinâmico: os temas mudam de hora em hora ---- */
-  var CONTENT_POOL = [
-    { title: 'Tendinopatia, tendinite, tendinose e tenossinovite', text: 'Termos que costumam aparecer como sinônimos, mas descrevem condições diferentes. Explico tudo de forma simples e baseada em evidências, para que você entenda melhor o que está acontecendo com o seu corpo.' },
-    { title: 'Gelo x calor', text: 'Quando usar cada um e em quais situações, de forma prática, para cuidar do sintoma no momento certo.' },
-    { title: 'Tempo de cicatrização dos tecidos', text: 'Cada tecido tem um tempo próprio de regeneração. Comparar a sua evolução com a de outra pessoa costuma atrasar mais do que ajudar.' },
-    { title: 'Reabilitação e prevenção de lesões', text: 'Restaurar o movimento, melhorar a funcionalidade e devolver segurança para as atividades do dia a dia.' },
-    { title: 'Dor lombar e movimento', text: 'A dor lombar pede contexto: rotina, sono, carga e movimento. Entender esses fatores ajuda a escolher um caminho seguro para melhorar.' },
-    { title: 'Como voltar a treinar depois de uma lesão', text: 'A volta acontece por etapas. Progressão de carga, qualidade do movimento e recuperação caminham juntas para reduzir o risco de novas pausas.' },
-    { title: 'Pilates e consciência corporal', text: 'Respiração, controle e força se encontram para melhorar a percepção do corpo e dar mais confiança para se movimentar.' },
-    { title: 'Postura no trabalho', text: 'Não existe uma postura perfeita o dia inteiro. Alternar posições e fazer pausas curtas costuma ser mais útil do que tentar ficar imóvel.' }
-  ];
-  var contentFeatured = document.querySelector('.conteudo__grid .tema--featured');
-  var contentSide = document.querySelectorAll('.conteudo__grid .tema__side .tema');
-  var contentItems = contentFeatured ? [contentFeatured].concat(Array.prototype.slice.call(contentSide)) : [];
-
-  function applyContentRotation(withFade) {
-    if (contentItems.length < 4) return;
-    var order = shuffledIndexes(hourSeed() + 7919, CONTENT_POOL.length);
-    contentItems.forEach(function (item, slotIdx) {
-      var pick = CONTENT_POOL[order[slotIdx]];
-      var title = item.querySelector('h3');
-      var text = item.querySelector('p');
-      if (!title || !text) return;
-      var update = function () {
-        title.textContent = pick.title;
-        text.textContent = pick.text;
-        item.style.opacity = '';
-      };
-      if (withFade && !prefersReduced) {
-        item.style.opacity = '0.15';
-        setTimeout(update, 220 + slotIdx * 45);
-      } else update();
-    });
+  /* A ordem muda diariamente e a janela avança uma posição por hora.
+     Assim, o conjunto sempre troca (não apenas a posição dos mesmos posts). */
+  function selectHourly(posts, count, salt, targetHour) {
+    if (!posts.length || !count) return [];
+    var daySeed = Math.floor(targetHour / 24) + salt;
+    var order = shuffledIndexes(daySeed, posts.length);
+    var start = ((targetHour + salt) % posts.length + posts.length) % posts.length;
+    var selected = [];
+    var i;
+    for (i = 0; i < Math.min(count, posts.length); i++) {
+      selected.push(posts[order[(start + i) % posts.length]]);
+    }
+    return selected;
   }
 
-  var lastContentHour = hourSeed();
-  if (contentItems.length >= 4) {
-    applyContentRotation(false);
-    setInterval(function () {
-      var nowHour = hourSeed();
-      if (nowHour !== lastContentHour) {
-        lastContentHour = nowHour;
-        applyContentRotation(true);
-      }
-    }, 60000);
+  function setImagePost(img, post) {
+    img.src = post.image;
+    img.style.objectPosition = post.objectPosition || '50% 50%';
+    img.alt = 'Publicação sobre ' + post.title + ' no perfil @fisio.patriciagomes';
   }
 
-  function applyInstaRotation(withFade) {
-    if (!instaItems.length) return;
-    var order = shuffledIndexes(hourSeed(), INSTA_POOL.length);
+  function applyInstagram(posts, withFade) {
     instaItems.forEach(function (item, slotIdx) {
+      var post = posts[slotIdx];
       var img = item.querySelector('img');
-      if (!img) return;
-      var pickIndex = order[slotIdx];
-      if (typeof pickIndex === 'undefined') {
-        item.hidden = true;
-        return;
-      }
-      item.hidden = false;
-      var pick = INSTA_POOL[pickIndex];
-      if (img.getAttribute('src') === pick.src &&
-          (img.style.objectPosition || '') === pick.pos) return;
+      if (!post || !img) return;
+
+      item.href = post.url;
+      item.dataset.postId = post.id;
+      if (img.getAttribute('src') === post.image &&
+          (img.style.objectPosition || '') === (post.objectPosition || '50% 50%')) return;
 
       var swap = function () {
-        img.src = pick.src;
-        img.style.objectPosition = pick.pos;
+        setImagePost(img, post);
         img.style.opacity = '';
       };
 
       if (withFade && !prefersReduced) {
-        img.style.opacity = '0.12';
-        setTimeout(function () {
-          img.src = pick.src;
-          img.style.objectPosition = pick.pos;
-          if (img.complete) {
-            window.requestAnimationFrame(function () { img.style.opacity = ''; });
-          } else {
-            img.onload = swap;
-          }
-        }, 240);
+        var preloader = new Image();
+        preloader.onload = function () {
+          img.style.opacity = '0.12';
+          setTimeout(swap, 220);
+        };
+        preloader.onerror = swap;
+        preloader.src = post.image;
       } else {
         swap();
       }
     });
   }
 
-  if (instaItems.length) {
-    /* transição suave de opacidade nas trocas */
+  function applyContent(posts, withFade) {
+    contentCards.forEach(function (card, slotIdx) {
+      var post = posts[slotIdx];
+      var heading = card.querySelector('h3');
+      var link = heading ? heading.querySelector('.tema__link') : null;
+      var summary = card.querySelector('p');
+      if (!post || !link || !summary) return;
+
+      var swap = function () {
+        link.textContent = post.title;
+        link.href = post.url;
+        summary.textContent = post.summary;
+        card.dataset.postId = post.id;
+        card.style.opacity = '';
+      };
+
+      if (withFade && !prefersReduced) {
+        card.style.transition = 'opacity .35s ease';
+        card.style.opacity = '0.25';
+        setTimeout(swap, 180);
+      } else {
+        swap();
+      }
+    });
+  }
+
+  function renderFeeds(withFade, targetHour) {
+    applyInstagram(selectHourly(feedCatalog, instaItems.length, 173, targetHour), withFade);
+    applyContent(selectHourly(feedCatalog, contentCards.length, 941, targetHour), withFade);
+  }
+
+  /* Prepara apenas as imagens novas da próxima hora, sem baixar o catálogo inteiro. */
+  function warmNextHour() {
+    var next = selectHourly(feedCatalog, instaItems.length, 173, hourSeed() + 1);
+    var loaded = {};
+    instaItems.forEach(function (item) {
+      var img = item.querySelector('img');
+      if (img) loaded[img.getAttribute('src')] = true;
+    });
+    next.forEach(function (post) {
+      if (!loaded[post.image]) {
+        var pre = new Image();
+        pre.src = post.image;
+      }
+    });
+  }
+
+  function startFeedRotation() {
+    renderFeeds(false, lastFeedHour);
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(warmNextHour, { timeout: 2500 });
+    } else {
+      setTimeout(warmNextHour, 1200);
+    }
+
+    setInterval(function () {
+      var nowHour = hourSeed();
+      if (nowHour !== lastFeedHour) {
+        lastFeedHour = nowHour;
+        renderFeeds(true, nowHour);
+        warmNextHour();
+      }
+    }, 60000);
+  }
+
+  if (instaItems.length || contentCards.length) {
     instaItems.forEach(function (item) {
       var img = item.querySelector('img');
       if (img) img.style.transition =
         'opacity .55s ease, transform .7s var(--ease-out), filter .5s var(--ease)';
     });
 
-    applyInstaRotation(false);
-
-    /* pré-carrega o acervo para as trocas horárias serem instantâneas */
-    window.addEventListener('load', function () {
-      INSTA_POOL.forEach(function (p) {
-        var pre = new Image();
-        pre.src = p.src;
+    fetch(FEED_CATALOG_URL)
+      .then(function (response) {
+        if (!response.ok) throw new Error('Não foi possível carregar o catálogo de publicações.');
+        return response.json();
+      })
+      .then(function (catalog) {
+        if (!catalog || !Array.isArray(catalog.posts) || !catalog.posts.length) {
+          throw new Error('O catálogo de publicações está vazio.');
+        }
+        feedCatalog = catalog.posts;
+        startFeedRotation();
+      })
+      .catch(function (error) {
+        /* O HTML contém um conjunto estático completo para manter a seção disponível. */
+        console.warn('[feed] Catálogo indisponível; usando conteúdo de fallback.', error);
       });
-    });
-
-    /* verifica a cada 60s se a virada de hora aconteceu */
-    setInterval(function () {
-      var nowHour = hourSeed();
-      if (nowHour !== lastInstaHour) {
-        lastInstaHour = nowHour;
-        applyInstaRotation(true);
-      }
-    }, 60000);
   }
 
   /* ---- Ano corrente no rodapé ---- */

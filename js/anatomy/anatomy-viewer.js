@@ -2,7 +2,8 @@ export function createAnatomyViewer({ THREE, GLTFLoader, elements, initialSet })
   const { stage, canvas, loading, loadingText, fallback, selectionText } = elements;
   if (!stage || !canvas) return null;
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reducedMotion = motionPreference.matches;
   const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
   const scene = new THREE.Scene();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -152,6 +153,7 @@ export function createAnatomyViewer({ THREE, GLTFLoader, elements, initialSet })
     }
     groupObjects.get(partDefinition.group).add(partObject);
     parts.push({
+      order: index,
       object: partObject,
       groupId: partDefinition.group,
       id: partDefinition.id,
@@ -259,6 +261,9 @@ export function createAnatomyViewer({ THREE, GLTFLoader, elements, initialSet })
   }
 
   function onWheel(event) {
+    // A roda continua rolando a página. Zoom exige o modificador, uma
+    // intenção explícita que evita capturar a navegação ao atravessar o 3D.
+    if (!event.ctrlKey && !event.metaKey) return;
     event.preventDefault();
     const settings = activeSet.camera;
     cameraDistance = THREE.MathUtils.clamp(cameraDistance + event.deltaY * 0.008, settings.minDistance, settings.maxDistance);
@@ -303,10 +308,15 @@ export function createAnatomyViewer({ THREE, GLTFLoader, elements, initialSet })
       if (definitions.length !== activeSet.expectedPartCount) {
         throw new Error(`Quantidade inesperada de modelos: ${definitions.length}`);
       }
-      for (let index = 0; index < definitions.length; index += 1) {
-        await loadPart(definitions[index], index, definitions.length, version);
+      const batchSize = 4;
+      for (let index = 0; index < definitions.length; index += batchSize) {
+        const batch = definitions.slice(index, index + batchSize);
+        await Promise.all(batch.map((definition, offset) =>
+          loadPart(definition, index + offset, definitions.length, version)
+        ));
         if (version !== loadVersion) return;
       }
+      parts.sort((a, b) => a.order - b.order);
 
       const arrangement = activeSet.arrangeParts({ parts, root, camera, THREE });
       cameraDistance = arrangement.cameraDistance;
@@ -355,6 +365,10 @@ export function createAnatomyViewer({ THREE, GLTFLoader, elements, initialSet })
   canvas.addEventListener('pointercancel', onPointerEnd);
   canvas.addEventListener('wheel', onWheel, { passive: false });
   canvas.addEventListener('keydown', onKeyDown);
+  motionPreference.addEventListener('change', (event) => {
+    reducedMotion = event.matches;
+    clock.getDelta();
+  });
   document.querySelectorAll('[data-spine-region], [data-anatomy-group]').forEach((button) => {
     button.addEventListener('click', () => selectGroup(buttonGroup(button)));
   });
