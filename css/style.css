@@ -343,6 +343,7 @@ ul, ol { list-style: none; }
 .sobre { background: var(--cream); position: relative; z-index: 1; }
 .sobre__grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
 .sobre__lead .section__title { max-width: 14ch; }
+.sobre__lead .section__title em { color: var(--terracotta); }
 @media (min-width: 920px) {
   .sobre__lead .section__title { max-width: 16ch; }
 }
